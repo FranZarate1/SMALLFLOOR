@@ -7,8 +7,8 @@ Class {
 		'delay',
 		'proceso'
 	],
-	#category : 'Juego',
-	#package : 'Juego'
+	#category : 'JUEGUITO',
+	#package : 'JUEGUITO'
 }
 
 { #category : 'as yet unclassified' }
