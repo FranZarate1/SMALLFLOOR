@@ -1,6 +1,11 @@
 Class {
 	#name : 'SMALLFLOOR',
 	#superclass : 'Object',
+	#instVars : [
+		'fila',
+		'columna',
+		'flag_config'
+	],
 	#category : 'JUEGUITO',
 	#package : 'JUEGUITO'
 }
@@ -22,7 +27,8 @@ SMALLFLOOR >> Iniciar [
 	"Poner caratula en esta parte"
 	
     "Crear y configurar el primer botón"
-    boton1 := SimpleButtonMorph new.
+  	 flag_config := false.
+	 boton1 := SimpleButtonMorph new.
     boton1 label: 'Iniciar Juego'; 
         target: self; 
         actionSelector: #accionBoton1; 
@@ -62,7 +68,10 @@ SMALLFLOOR >> Iniciar [
 SMALLFLOOR >> accionBoton1 [
     "Aquí defines qué hace el primer botón"
     |p|
-	p:= Tablero new Crear_Tablero: 4 columna: 4 . 
+	flag_config ifFalse: [ p:= Tablero new Crear_Tablero: 4 columna: 4.] 
+	ifTrue: [ p:= Tablero new Crear_Tablero: fila columna: columna .  ].
+	
+	
 	
 	
 	
@@ -71,7 +80,20 @@ SMALLFLOOR >> accionBoton1 [
 { #category : 'as yet unclassified' }
 SMALLFLOOR >> accionBoton2 [
     "Aquí defines qué hace el segundo botón"
-    Transcript show: 'Botón 2 presionado'; cr.
+	| ventana|
+	
+    ventana := Morph new.
+    ventana extent: 400@300;  "Tamaño de la ventana"
+        openInWorld.
+	
+	fila:= (UIManager default request: 'Elija la cantidad de filas:')asInteger.
+	columna:= (UIManager default request: 'Elija la cantidad de columnas:')asInteger.
+	flag_config:=true. 
+	
+	ventana delete.
+
+	
+	
 ]
 
 { #category : 'as yet unclassified' }
