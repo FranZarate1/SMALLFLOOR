@@ -6,15 +6,15 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-Tablero >> Crear_Tablero [
+Tablero >> Crear_Tablero: filap columna:columnap [
 	| tablero ventana filas columnas celda fila anchoCelda altoCelda totalAncho totalAlto |
 
 ventana := SystemWindow new.
 ventana setLabel: 'Tablero 4x4'.
 ventana extent: 400@400.  "Tamaño inicial de la ventana."
 
-filas := 4.  "Número de filas"
-columnas := 4.  "Número de columnas"
+filas := filap .  "Número de filas"
+columnas := columnap .  "Número de columnas"
 
 "Calcular el tamaño de las celdas según el tamaño de la ventana"
 totalAncho := ventana extent x.  "Ancho total de la ventana"
@@ -39,7 +39,8 @@ tablero hResizing: #spaceFill; vResizing: #spaceFill.  "Permitir que se ajuste a
     fila extent: totalAncho @ altoCelda.  "Cada fila tendrá un alto dinámico según la ventana."
 
     1 to: columnas do: [ :j |
-        celda := Morph new.
+        celda := SimpleButtonMorph new.
+        celda label: 'Juegador', j asString, '-', i asString.
         celda extent: anchoCelda @ altoCelda.  "Cada celda tendrá un tamaño dinámico."
 
         "Agregar un borde negro a cada celda para que sea visible"

@@ -13,7 +13,7 @@ SMALLFLOOR >> Iniciar [
 	ventana setLabel: 'Inicio del juego'.
 	ventana extent: 800@800 "
 	
-	| ventana boton1 boton2 boton3|
+	| ventana boton1 boton2 boton3 boton4|
 	
     ventana := Morph new.
     ventana extent: 400@300;  "Tamaño de la ventana"
@@ -26,7 +26,7 @@ SMALLFLOOR >> Iniciar [
     boton1 label: 'Iniciar Juego'; 
         target: self; 
         actionSelector: #accionBoton1; 
-        position: 160@150.  "Primer N° posición horizantal y el segundo la vertical"
+        position: 160@150.  "Primer N° posición horizontal y el segundo la vertical"
     ventana addMorph: boton1.
 
     "Crear y configurar el tercer botón"
@@ -44,6 +44,14 @@ SMALLFLOOR >> Iniciar [
         actionSelector: #accionBoton3; 
         position: 160@250.
     ventana addMorph: boton3.
+
+	"Crear y configurar el segundo botón"
+    boton4 := SimpleButtonMorph new.
+    boton4 label: 'X'; 
+        target: self; 
+        actionSelector: #accionBoton3; 
+        position: 385@19.
+    ventana addMorph: boton4.
 	
 	
 	
@@ -54,9 +62,9 @@ SMALLFLOOR >> Iniciar [
 SMALLFLOOR >> accionBoton1 [
     "Aquí defines qué hace el primer botón"
     |p|
-	p:= Tablero new.
+	p:= Tablero new Crear_Tablero: 4 columna: 4 . 
 	
-	p Crear_Tablero 
+	
 	
 ]
 
