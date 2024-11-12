@@ -4,8 +4,7 @@ Class {
 	#instVars : [
 		'fila',
 		'columna',
-		'flag_config',
-		'tabla'
+		'flag_config'
 	],
 	#category : 'JUEGUITO',
 	#package : 'JUEGUITO'
@@ -13,14 +12,17 @@ Class {
 
 { #category : 'as yet unclassified' }
 SMALLFLOOR >> Iniciar [
-	
-	| ventana boton1 boton2 boton3 boton4|
+
+	| ventana boton1 boton2 boton3 boton4 |
 	
     ventana := Morph new.
     ventana extent: 400@300;  "Tamaño de la ventana"
         openInWorld.
-    tabla:=ventana.
+    
 	"Poner caratula en esta parte"
+	  "Poner caratula en esta parte"
+
+	
 	
     "Crear y configurar el primer botón"
   	 flag_config := false.
@@ -51,7 +53,7 @@ SMALLFLOOR >> Iniciar [
     boton4 := SimpleButtonMorph new.
     boton4 label: 'X'; 
         target: self; 
-        actionSelector: #accionBoton4; 
+        actionSelector: #accionBoton3; 
         position: 385@19.
     ventana addMorph: boton4.
 	
@@ -95,11 +97,4 @@ SMALLFLOOR >> accionBoton2 [
 { #category : 'as yet unclassified' }
 SMALLFLOOR >> accionBoton3 [
 	
-]
-
-{ #category : 'as yet unclassified' }
-SMALLFLOOR >> accionBoton4 [
-	"Este método cierra la ventana"
-	tabla ifNotNil: [tabla delete].
-
 ]
