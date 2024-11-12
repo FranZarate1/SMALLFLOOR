@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'fila',
 		'columna',
-		'flag_config'
+		'flag_config',
+		'ventana'
 	],
 	#category : 'JUEGUITO',
 	#package : 'JUEGUITO'
@@ -13,7 +14,7 @@ Class {
 { #category : 'as yet unclassified' }
 SMALLFLOOR >> Iniciar [
 
-	| ventana boton1 boton2 boton3 boton4 |
+	| boton1 boton2 boton3 boton4 |
 	
     ventana := Morph new.
     ventana extent: 400@300;  "Tamaño de la ventana"
@@ -53,8 +54,8 @@ SMALLFLOOR >> Iniciar [
     boton4 := SimpleButtonMorph new.
     boton4 label: 'X'; 
         target: self; 
-        actionSelector: #accionBoton3; 
-        position: 385@19.
+		  actionSelector: #accionBoton4;
+		  position: 385@19.
     ventana addMorph: boton4.
 	
 	
@@ -97,4 +98,10 @@ SMALLFLOOR >> accionBoton2 [
 { #category : 'as yet unclassified' }
 SMALLFLOOR >> accionBoton3 [
 	
+]
+
+{ #category : 'as yet unclassified' }
+SMALLFLOOR >> accionBoton4 [
+    ventana delete.
+
 ]
