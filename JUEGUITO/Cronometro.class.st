@@ -5,7 +5,9 @@ Class {
 		'tiempo',
 		'enMarcha',
 		'delay',
-		'proceso'
+		'proceso',
+		'pausaTiempo',
+		'ventana'
 	],
 	#category : 'JUEGUITO',
 	#package : 'JUEGUITO'
@@ -29,6 +31,7 @@ Cronometro >> detener [
 Cronometro >> iniciar [
   tiempo := 15. "Inicia el cronómetro en 15 segundos"
         enMarcha := true.
+        pausaTiempo := 0.
         delay := Delay forSeconds: 1.
 
         proceso := [
@@ -73,4 +76,9 @@ tiempo := 15.
         pausaTiempo := 0.  "Resetea el tiempo de pausa"
         proceso ifNotNil: [ proceso terminate ].  "Asegura que el proceso anterior esté terminado"
         Transcript show: 'Cronómetro reiniciado a 15 segundos.'; cr.
+]
+
+{ #category : 'as yet unclassified' }
+Cronometro >> tiempoActual [
+^tiempo
 ]
