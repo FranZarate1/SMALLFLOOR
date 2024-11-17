@@ -1,68 +1,56 @@
 Class {
 	#name : 'Tablero',
 	#superclass : 'Object',
-	#instVars : [
-		'matrix'
-	],
 	#category : 'JUEGUITO',
 	#package : 'JUEGUITO'
 }
 
 { #category : 'as yet unclassified' }
-Tablero >> Crear_Tablero: filap columna: columnap [
-    | tablero ventana filas columnas celda anchoCelda altoCelda totalAncho totalAlto matrizCeldas xOffset yOffset |
+Tablero >> Crear_Tablero: filap columna:columnap [
+	| tablero ventana filas columnas celda fila anchoCelda altoCelda totalAncho totalAlto  |
 
-    ventana := SystemWindow new.
-    ventana setLabel: 'Tablero 4x4'.
-    ventana extent: 400@400.  "Tamaño inicial de la ventana."
+ventana := SystemWindow new.
+ventana setLabel: 'Tablero 4x4'.
+ventana extent: 800@800.  "Tamaño inicial de la ventana."
 
-    filas := filap.  "Número de filas"
-    columnas := columnap.  "Número de columnas"
+filas := filap .  "Número de filas"
+columnas := columnap .  "Número de columnas"
 
-    "Calcular el tamaño de las celdas según el tamaño de la ventana"
-    totalAncho := ventana extent x.  "Ancho total de la ventana"
-    totalAlto := ventana extent y.  "Alto total de la ventana"
-    anchoCelda := totalAncho // columnas.  "Ancho de cada celda"
-    altoCelda := totalAlto // filas.  "Alto de cada celda"
+"Calcular el tamaño de las celdas según el tamaño de la ventana"
+totalAncho := ventana extent x.  "Ancho total de la ventana"
+totalAlto := ventana extent y.  "Alto total de la ventana"
+anchoCelda := totalAncho // columnas.  "Ancho de cada celda"
+altoCelda := totalAlto // filas.  "Alto de cada celda"
 
-    "Crear la matriz para almacenar las celdas"
-    matrizCeldas := Array new: filas * columnas .  "Crea un arreglo para las filas"
-    1 to: filas do: [:i | matrizCeldas at: i put: (Array new: columnas)].
+"Crear el contenedor para las filas"
+tablero := Morph new.
+tablero layoutPolicy: TableLayout new.  "Usar TableLayout para organizar las filas."
+tablero listDirection: #topToBottom.  "Organizar de arriba hacia abajo."
 
-    "Crear el tablero"
-    tablero := Morph new.
-    tablero layoutPolicy: nil.  "Sin layout automático; las celdas se posicionan manualmente."
-    tablero hResizing: #spaceFill; vResizing: #spaceFill.  "Permitir que se ajuste al espacio disponible."
+tablero hResizing: #spaceFill; vResizing: #spaceFill.  "Permitir que se ajuste al espacio disponible."
 
-    "Crear y posicionar las celdas directamente en el tablero"
-    "Crear y posicionar las celdas directamente en el tablero"
-	yOffset := 0.
-	1 to: filas do: [:i | 
-   		xOffset := 0.
-   		1 to: columnas do: [:j | 
-      		"Crear la celda con tamaño y posición específicos"
-        	celda := Celda new CrearCelda: anchoCelda altoo: altoCelda fila: i columna: j.
-			
-        	celda position: xOffset @ yOffset.  "Colocar la celda en su posición en el tablero"
-     
-			
+1 to: filas do: [ :i |
+    "Crear un contenedor para la fila"
+    fila := Morph new.
+    fila layoutPolicy: TableLayout new.  "Usar TableLayout para organizar las celdas."
+    fila listDirection: #leftToRight.  "Organizar de izquierda a derecha."
 
-        "Agregar la celda a la matriz"
-         (matrizCeldas at: i) at: j put: celda.
-        "Agregar la celda al tablero"
-        tablero addMorph: celda.
+    "Ajustar el tamaño de la fila para que ocupe todo el ancho"
+    fila extent: totalAncho @ altoCelda.  "Cada fila tendrá un alto dinámico según la ventana."
 
-        "Actualizar el offset horizontal"
-        xOffset := xOffset + anchoCelda.
+    1 to: columnas do: [ :j |
+       		"Crear la celda pasando el tamaño y las coordenadas"
+            celda := Celda new CrearCelda: anchoCelda altoo: altoCelda fila: i columna: j.
+            
+            "Agregar la celda a la fila"
+            fila addMorphBack: celda.
     ].
-    "Actualizar el offset vertical"
-    yOffset := yOffset + altoCelda.
+
+    "Agregar la fila al tablero"
+    tablero addMorphBack: fila.
 ].
 
 "Agregar el tablero dentro de la ventana"
 ventana addMorph: tablero.
 ventana openInWorld.
-
-    "Almacenar la matriz como un atributo de la clase para acceso posterior"
-    matrix := matrizCeldas.
 ]
