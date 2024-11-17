@@ -29,14 +29,15 @@ Celda >> CrearCelda: ancho altoo: alto fila: i columna: j [
     celdaMorph addMorph: etiqueta.
     "Configurar acción para cambiar de color al hacer clic"
     celdaMorph on: #mouseUp send: #value to: [ celdaMorph color: Color random ].
-	 self Posicionx: i.  "Guardar posición X"
-    self Posiciony: j.  "Guardar posición Y"
+
+	 self Setx: i.  "Guardar posición X"
+    self Sety: j.  "Guardar posición Y"
     
     ^ celdaMorph  "Devolver el Morph creado"
 ]
 
 { #category : 'as yet unclassified' }
-Celda >> Posicionx: valorx [
+Celda >> Setx: valorx [
 	|x|
 	x:= valorx.
 	Posx:= x .
@@ -44,7 +45,7 @@ Celda >> Posicionx: valorx [
 ]
 
 { #category : 'as yet unclassified' }
-Celda >> Posiciony: valory [ 
+Celda >> Sety: valory [ 
 	|y|
 	y:= valory.
     Posy := y.
