@@ -12,6 +12,25 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
+SMALLFLOOR >> INICIAR_JUGADORES [
+
+| cantidad nombres color opciones seleccion |
+cantidad := 0.
+
+opciones := #('2' '4' '8' '16' '32' '64').
+
+"Elige una opción, devuelve el índice de la opción seleccionada (1, 2, ..., o 0 si se cancela)"
+seleccion := UIManager default chooseFrom: opciones lines: #() title: 'Elige una cantidad de jugadores'.
+seleccion = 0 ifTrue: [^ 'No se eligió ninguna opción'].
+
+"Obtiene el valor correspondiente a la opción seleccionada"
+cantidad := (opciones at: seleccion) asInteger.
+
+^ 'Elegiste: ', cantidad asString .
+
+]
+
+{ #category : 'as yet unclassified' }
 SMALLFLOOR >> Iniciar [
 
 	| boton1 boton2 boton3 boton4 |
