@@ -10,11 +10,14 @@ Class {
 
 { #category : 'as yet unclassified' }
 Tablero >> Crear_Tablero: filap columna: columnap [
-    | tablero ventana filas columnas celda anchoCelda altoCelda totalAncho totalAlto matrizCeldas xOffset yOffset |
+    | tablero ventana  ventana2 filas columnas celda anchoCelda altoCelda totalAncho totalAlto matrizCeldas xOffset yOffset botonB|
+
+	 ventana2 := SystemWindow new.
+    ventana2 setLabel: 'Tablero 4x4'.
+    ventana2 extent: 800@870.  "Tamaño inicial de la ventana."
 
     ventana := SystemWindow new.
-    ventana setLabel: 'Tablero 4x4'.
-    ventana extent: 400@400.  "Tamaño inicial de la ventana."
+    ventana extent: 800@800.  "Tamaño inicial de la ventana."
 
     filas := filap.  "Número de filas"
     columnas := columnap.  "Número de columnas"
@@ -59,7 +62,17 @@ Tablero >> Crear_Tablero: filap columna: columnap [
 
     "Agregar el tablero dentro de la ventana"
     ventana addMorph: tablero.
-    ventana openInWorld.
+
+	"Agregar otra ventana para poner un boton e iniciar la busqueda del jugador"
+	 botonB := SimpleButtonMorph new.
+    botonB label: 'Iniciar Juego'; 
+        target: self; 
+        actionSelector: #Buscar_Ju; 
+        position: 375@830.  "Primer N° posición horizontal y el segundo la vertical"
+    ventana2 addMorph: botonB.
+	 ventana2  addMorph: ventana.
+	 
+    ventana2 openInWorld.
 
     "Almacenar la matriz como un atributo de la clase para acceso posterior"
     Matrix := matrizCeldas.
