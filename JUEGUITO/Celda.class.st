@@ -34,16 +34,19 @@ Celda >> CrearCelda: ancho altoo: alto fila: i columna: j [
     self setY: j.  "Guardar posición Y"
 	  "crea jugadores"
 	
-	  NumeroJugador:=NumeroJugador+1.
 	  juegador:= Jugador new.
-	  juegador CrearJugador: NumeroJugador  color: COLORCELDA . 	
+	  juegador CrearJugador: i  color: COLORCELDA . 	
  	  
-	 
+	  "Asignar la celda al territorio del jugador"
+     juegador AgregarTerritorio: {self}.
 	 	
 
     "Configurar acción para cambiar de color al hacer clic"
     celdaMorph on: #mouseUp send: #value to: [ celdaMorph color: Color random ].
-    
+
+      Transcript show: 'Celda creada en fila: ', i asString, ', columna: ', j asString; cr.
+      Transcript show: 'Celda asignada al territorio del jugador ', i asString; cr.
+ 
     ^ celdaMorph  "Devolver el Morph creado"
 ]
 
