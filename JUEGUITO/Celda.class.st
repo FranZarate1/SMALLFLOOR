@@ -13,8 +13,8 @@ Class {
 
 { #category : 'as yet unclassified' }
 Celda >> CrearCelda: ancho altoo: alto fila: i columna: j [
-    | celdaMorph etiqueta Juegador |
-	 NumeroJugador :=0 asInteger.
+    | celdaMorph etiqueta juegador |
+	 NumeroJugador :=0 .
     celdaMorph := Morph new.  "Crear un Morph directamente para representar la celda"
 	 COLORCELDA:= Color random.
 	 celdaMorph color: COLORCELDA.  "Asignar un color aleatorio inicial"
@@ -32,11 +32,13 @@ Celda >> CrearCelda: ancho altoo: alto fila: i columna: j [
 	 "Guardar las posiciones X e Y de la celda"
     self setX: i.  "Guardar posición X"
     self setY: j.  "Guardar posición Y"
-
-     NumeroJugador := (NumeroJugador + 1).
 	  "crea jugadores"
-	  Juegador:= Jugador new.
-	  Juegador CrearJugador: NumeroJugador  color: COLORCELDA . 	
+	
+	  NumeroJugador:=NumeroJugador+1.
+	  juegador:= Jugador new.
+	  juegador CrearJugador: NumeroJugador  color: COLORCELDA . 	
+ 	  
+	 
 	 	
 
     "Configurar acción para cambiar de color al hacer clic"
