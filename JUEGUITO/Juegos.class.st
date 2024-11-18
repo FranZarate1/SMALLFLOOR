@@ -111,7 +111,7 @@ ventana openInWorld.
 ]
 
 { #category : 'as yet unclassified' }
-Juegos >> suma [
+Juegos >> SumaTrix [
 | numeros suma usuario1 usuario2 diferencia1 diferencia2 resultado morph ventana resultadoMorph |
 
 "Generar tres números aleatorios entre -10 y 50"
@@ -187,6 +187,7 @@ ventana addMorph: resultadoMorph.
 
     "No necesitamos más ajustes de posición ni de ventana"
 ] fork.
+
 
 
 ]

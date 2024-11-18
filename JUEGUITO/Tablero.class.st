@@ -10,9 +10,9 @@ Class {
 
 { #category : 'as yet unclassified' }
 Tablero >> Crear_Tablero: filap columna: columnap [
-    | tablero ventana  ventana2 filas columnas celda anchoCelda altoCelda totalAncho totalAlto matrizCeldas xOffset yOffset botonB|
+    | tablero ventana ventana2 filas columnas celda anchoCelda altoCelda totalAncho totalAlto matrizCeldas xOffset yOffset botonB |
 
-	 ventana2 := SystemWindow new.
+    ventana2 := SystemWindow new.
     ventana2 setLabel: 'Tablero 4x4'.
     ventana2 extent: 800@870.  "Tamaño inicial de la ventana."
 
@@ -28,16 +28,15 @@ Tablero >> Crear_Tablero: filap columna: columnap [
     anchoCelda := totalAncho // columnas.  "Ancho de cada celda"
     altoCelda := totalAlto // filas.  "Alto de cada celda"
 
-	"aca se crea el tablero"
-	 tablero := Morph new.
+    "Crear el tablero"
+    tablero := Morph new.
     tablero layoutPolicy: nil.  "Sin layout automático; las celdas se posicionan manualmente."
     tablero hResizing: #spaceFill; vResizing: #spaceFill.  "Permitir que se ajuste al espacio disponible."
-	
+
     "Crear la matriz para almacenar las celdas"
-    matrizCeldas := Array new: filas * columnas .  "Crea un arreglo para las filas"
+    matrizCeldas := Array new: filas.  "Crea un arreglo para las filas"
     1 to: filas do: [:i | matrizCeldas at: i put: (Array new: columnas)].
 
-    
     "Crear y posicionar las celdas directamente en el tablero"
     yOffset := 0.
     1 to: filas do: [:i | 
@@ -63,17 +62,18 @@ Tablero >> Crear_Tablero: filap columna: columnap [
     "Agregar el tablero dentro de la ventana"
     ventana addMorph: tablero.
 
-	"Agregar otra ventana para poner un boton e iniciar la busqueda del jugador"
-	 botonB := SimpleButtonMorph new.
+    "Agregar otra ventana para poner un botón e iniciar la búsqueda del jugador"
+    botonB := SimpleButtonMorph new.
     botonB label: 'Iniciar Juego'; 
         target: self; 
         actionSelector: #Buscar_Ju; 
         position: 375@830.  "Primer N° posición horizontal y el segundo la vertical"
     ventana2 addMorph: botonB.
-	 ventana2  addMorph: ventana.
-	 
+    ventana2 addMorph: ventana.
+
     ventana2 openInWorld.
 
     "Almacenar la matriz como un atributo de la clase para acceso posterior"
     Matrix := matrizCeldas.
+
 ]
