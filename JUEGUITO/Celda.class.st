@@ -3,8 +3,8 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'COLORCELDA',
-		'Posx',
-		'Posy'
+		'x',
+		'y'
 	],
 	#category : 'JUEGUITO',
 	#package : 'JUEGUITO'
@@ -13,10 +13,8 @@ Class {
 { #category : 'as yet unclassified' }
 Celda >> CrearCelda: ancho altoo: alto fila: i columna: j [
     | celdaMorph etiqueta |
-	 
     celdaMorph := Morph new.  "Crear un Morph directamente para representar la celda"
 	 COLORCELDA:= Color random.
-	 
 	 celdaMorph color: COLORCELDA.  "Asignar un color aleatorio inicial"
     celdaMorph extent: ancho @ alto.  "Asignar el tamaño de la celda"
     celdaMorph borderWidth: 2.  "Asignar el ancho del borde"
@@ -27,27 +25,29 @@ Celda >> CrearCelda: ancho altoo: alto fila: i columna: j [
     etiqueta contents: 'Jugador ', i asString, '-', j asString.
     etiqueta center: celdaMorph center.  "Centrar la etiqueta dentro de la celda"
     celdaMorph addMorph: etiqueta.
+    
     "Configurar acción para cambiar de color al hacer clic"
     celdaMorph on: #mouseUp send: #value to: [ celdaMorph color: Color random ].
-
-	 self Setx: i.  "Guardar posición X"
-    self Sety: j.  "Guardar posición Y"
     
     ^ celdaMorph  "Devolver el Morph creado"
 ]
 
 { #category : 'as yet unclassified' }
-Celda >> Setx: valorx [
-	|x|
-	x:= valorx.
-	Posx:= x .
-
+Celda >> getX [
+	^x.
 ]
 
 { #category : 'as yet unclassified' }
-Celda >> Sety: valory [ 
-	|y|
-	y:= valory.
-    Posy := y.
+Celda >> getY [
+	^y.
+]
 
+{ #category : 'initialization' }
+Celda >> setX: posicionX [
+	x:= posicionX asInteger.
+]
+
+{ #category : 'initialization' }
+Celda >> setY: posicionY [
+	y:= posicionY asInteger.
 ]
