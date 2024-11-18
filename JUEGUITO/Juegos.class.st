@@ -1,6 +1,9 @@
 Class {
 	#name : 'Juegos',
 	#superclass : 'Object',
+	#instVars : [
+		'ganador_duelo'
+	],
 	#category : 'JUEGUITO',
 	#package : 'JUEGUITO'
 }
@@ -91,9 +94,12 @@ procesoTiempo := [
 
     "Determinar ganador al finalizar los turnos"
     ganador := (contador1 > contador2)
-        ifTrue: [jugador1]
-        ifFalse: [contador2 > contador1 ifTrue: [jugador2] ifFalse: ['Empate']].
-
+        ifTrue: [jugador1.
+	ganador_duelo:= 1.]
+        ifFalse: [contador2 > contador1 ifTrue: [jugador2.
+		ganador_duelo:= 2.] ifFalse: ['Empate']].
+	 
+	
     UIManager default inform: 'Juego terminado.
 ', jugador1, ': ', contador1 printString, ' clics.
 ', jugador2, ': ', contador2 printString, ' clics.
@@ -106,7 +112,7 @@ ventana openInWorld.
 
 { #category : 'as yet unclassified' }
 Juegos >> suma [
-| numeros suma usuario1 usuario2 diferencia1 diferencia2 resultado morph ventana resultadoMorph|
+| numeros suma usuario1 usuario2 diferencia1 diferencia2 resultado morph ventana resultadoMorph |
 
 "Generar tres números aleatorios entre -10 y 50"
 numeros := { (1 to: 50) atRandom. (1 to: 30) atRandom. (1 to: 40) atRandom }.
@@ -167,8 +173,10 @@ ventana addMorph: resultadoMorph.
 
     "Comparar las respuestas"
     resultado := (diferencia1 <= diferencia2)
-        ifTrue: ['Jugador 1 gana con una diferencia de ', diferencia1 printString]
-        ifFalse: ['Jugador 2 gana con una diferencia de ', diferencia2 printString].
+        ifTrue: ['Jugador 1 gana con una diferencia de ', diferencia1 printString.
+		ganador_duelo:=1 ]
+        ifFalse: ['Jugador 2 gana con una diferencia de ', diferencia2 printString.
+		ganador_duelo:=2].
 
     "Mostrar el resultado en el Morph de resultado"
     resultadoMorph contents: 'Suma correcta: ', suma printString, ' - ', resultado.
