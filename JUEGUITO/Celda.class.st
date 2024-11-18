@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'COLORCELDA',
 		'x',
-		'y'
+		'y',
+		'NumeroJugador'
 	],
 	#category : 'JUEGUITO',
 	#package : 'JUEGUITO'
@@ -12,7 +13,8 @@ Class {
 
 { #category : 'as yet unclassified' }
 Celda >> CrearCelda: ancho altoo: alto fila: i columna: j [
-    | celdaMorph etiqueta |
+    | celdaMorph etiqueta Juegador |
+	 NumeroJugador :=0.
     celdaMorph := Morph new.  "Crear un Morph directamente para representar la celda"
 	 COLORCELDA:= Color random.
 	 celdaMorph color: COLORCELDA.  "Asignar un color aleatorio inicial"
@@ -25,7 +27,18 @@ Celda >> CrearCelda: ancho altoo: alto fila: i columna: j [
     etiqueta contents: 'Jugador ', i asString, '-', j asString.
     etiqueta center: celdaMorph center.  "Centrar la etiqueta dentro de la celda"
     celdaMorph addMorph: etiqueta.
-    
+	
+	 
+	 "Guardar las posiciones X e Y de la celda"
+    self setX: i.  "Guardar posición X"
+    self setY: j.  "Guardar posición Y"
+
+     NumeroJugador := NumeroJugador + 1.
+	  "crea jugadores"
+	  Juegador:= Jugador new.
+	  Juegador CrearJugador: NumeroJugador  color: COLORCELDA . 	
+	 	
+
     "Configurar acción para cambiar de color al hacer clic"
     celdaMorph on: #mouseUp send: #value to: [ celdaMorph color: Color random ].
     
