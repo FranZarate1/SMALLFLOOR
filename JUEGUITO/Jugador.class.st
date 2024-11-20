@@ -43,3 +43,13 @@ COLOR:=colorr.
 Jugador >> SetNombre:nombree [
  nombre:=nombree.
 ]
+
+{ #category : 'as yet unclassified' }
+Jugador >> actualizarColorTerritorio [ [
+    territorio do: [ :celda |
+        (celda color ~= COLOR) ifTrue: [
+            celda color: COLOR.
+        ].
+    ].
+]
+]
