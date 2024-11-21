@@ -15,10 +15,10 @@ Tablero >> Crear_Tablero: filap columna: columnap [
 
         ventana2 := SystemWindow new.
         ventana2 setLabel: 'Tablero 4x4'.
-        ventana2 extent: 600 @ 700.  "Tamaño inicial de la ventana."
+        ventana2 extent: 800 @ 700.  "Tamaño inicial de la ventana."
 
         ventana := SystemWindow new.
-        ventana extent: 600 @ 550.  "Tamaño inicial de la ventana."
+        ventana extent: 800 @ 600.  "Tamaño inicial de la ventana."
 
         filas := filap.  "Número de filas"
         columnas := columnap.  "Número de columnas"
@@ -71,7 +71,7 @@ Tablero >> Crear_Tablero: filap columna: columnap [
         botonB label: 'Iniciar Juego'; 
             target: self; 
             actionSelector: #EncontrarCeldaRandom;
-            position: 375 @ 630.  "Primer N° posición horizontal y el segundo la vertical"
+            position: 350 @ 630.  "Primer N° posición horizontal y el segundo la vertical"
         ventana2 addMorph: botonB.
         ventana2 addMorph: ventana.
 
@@ -203,7 +203,7 @@ Tablero >> marcarCeldasAdyacentes: fila columna: columna [
         | celdaAdyacente |
         celdaAdyacente := (Matrix at: pos x) at: pos y.
         celdaAdyacente borderWidth: 4.
-        celdaAdyacente borderColor: Color green .
+        celdaAdyacente borderColor: Color white .
 ]
 ]
 

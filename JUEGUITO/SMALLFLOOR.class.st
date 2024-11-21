@@ -132,7 +132,7 @@ SMALLFLOOR >> accionBoton2 [
 
 	 
 	 botonx := SimpleButtonMorph new.
-    botonx label: '2 jugadores'; 
+    botonx label: '4 jugadores'; 
         target: self; 
         actionSelector: #Jugadores_2;
         position: 100@100.
