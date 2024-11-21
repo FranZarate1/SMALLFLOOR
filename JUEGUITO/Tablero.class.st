@@ -80,7 +80,7 @@ Tablero >> Crear_Tablero: filap columna: columnap [
 
 { #category : 'as yet unclassified' }
 Tablero >> EncontrarCeldaRandom [ 
-| filaAleatoria columnaAleatoria celdaAleatoria |
+    | filaAleatoria columnaAleatoria celdaAleatoria totalCeldas contador |
 
     "Generar índices aleatorios para fila y columna"
     filaAleatoria := (1 to: Matrix size) atRandom.
@@ -95,19 +95,26 @@ Tablero >> EncontrarCeldaRandom [
         celdaSeleccionada borderColor: Color black.
     ].
 
-    "Hacer que todas las celdas titilen"
-    Matrix do: [:fila | fila do: [:celda | self titilarCelda: celda after: []]].
-
     "Guardar la referencia de la celda seleccionada"
     celdaSeleccionada := celdaAleatoria.
 
-    "Marcar la nueva celda seleccionada"
-    celdaSeleccionada borderWidth: 4.
-    celdaSeleccionada borderColor: Color red.
+ 
+    "Hacer que todas las celdas titilen y luego marcar las celdas seleccionadas y adyacentes"
+    totalCeldas := Matrix size * (Matrix at: 1) size.
+    contador := 0.
 
-    "Llamar al método para elegir y marcar las celdas adyacentes"
-    self marcarCeldasAdyacentes: filaAleatoria columna: columnaAleatoria.
+    Matrix do: [:fila |
+        fila do: [:celda |
+            self titilarCelda: celda after: [
+                contador := contador + 1.
+                (contador = totalCeldas) ifTrue: [
+                    self marcarCeldasSeleccionadasYAdyacentes: filaAleatoria columna: columnaAleatoria.
+                ].
+            ].
+        ].
+    ].
 
+  
     ^ celdaAleatoria
 ]
 
@@ -133,24 +140,51 @@ Tablero >> marcarCeldasAdyacentes: fila columna: columna [
         | celdaAdyacente |
         celdaAdyacente := (Matrix at: pos x) at: pos y.
         celdaAdyacente borderWidth: 4.
-        celdaAdyacente borderColor: Color white .
+        celdaAdyacente borderColor: Color red.
+    ].
 ]
+
+{ #category : 'as yet unclassified' }
+Tablero >> marcarCeldasSeleccionadasYAdyacentes: fila columna: columna [ 
+    | posicionesAdyacentes adyacentes |
+
+    "Marcar la celda seleccionada"
+    celdaSeleccionada borderWidth: 4.
+    celdaSeleccionada borderColor: Color red.
+
+    "Definir las posiciones adyacentes (arriba, abajo, izquierda, derecha)"
+    posicionesAdyacentes := {
+        (fila - 1) @ columna.  "Arriba"
+        (fila + 1) @ columna.  "Abajo"
+        fila @ (columna - 1).  "Izquierda"
+        fila @ (columna + 1).  "Derecha"
+    }.
+
+    "Filtrar las posiciones que están dentro de los límites del tablero"
+    adyacentes := posicionesAdyacentes select: [:pos |
+        (pos x between: 1 and: Matrix size) and: [pos y between: 1 and: (Matrix at: 1) size]
+    ].
+
+    "Marcar las celdas adyacentes"
+    adyacentes do: [:pos |
+        | celdaAdyacente |
+        celdaAdyacente := (Matrix at: pos x) at: pos y.
+        celdaAdyacente borderWidth: 4.
+        celdaAdyacente borderColor: Color white.
+    ]
 ]
 
 { #category : 'as yet unclassified' }
 Tablero >> titilarCelda: celda after: aBlock [ 
         | originalColor |
-        originalColor := celda color.
-        [ 10 timesRepeat: [
-            celda color: Color yellow.
-            (Delay forMilliseconds: 200) wait.
-            celda color: Color blue.
-            (Delay forMilliseconds: 200) wait.
-        ].
-        celda color: originalColor.  "Restaurar el color original al final"
-        aBlock value.  "Ejecutar el bloque después de que termine de titilar"
-        ] fork.
-    
-
-
+    originalColor := celda color.
+    [ 10 timesRepeat: [
+        celda color: Color yellow.
+        (Delay forMilliseconds: 200) wait.
+        celda color: Color blue.
+        (Delay forMilliseconds: 200) wait.
+    ].
+    celda color: originalColor.  "Restaurar el color original al final"
+    aBlock value.  "Ejecutar el bloque después de que termine de titilar"
+    ] fork.
 ]
