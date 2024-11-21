@@ -34,6 +34,12 @@ Jugador >> CrearJugador: unNombre color: unColor [
 ]
 
 { #category : 'as yet unclassified' }
+Jugador >> GetColor [
+	^COLOR .
+ 
+]
+
+{ #category : 'as yet unclassified' }
 Jugador >> SetColor:colorr [
 COLOR:=colorr.
 

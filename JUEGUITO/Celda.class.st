@@ -5,7 +5,7 @@ Class {
 		'COLORCELDA',
 		'x',
 		'y',
-		'NumeroJugador'
+		'Propietario'
 	],
 	#category : 'JUEGUITO',
 	#package : 'JUEGUITO'
@@ -14,7 +14,6 @@ Class {
 { #category : 'as yet unclassified' }
 Celda >> CrearCelda: ancho altoo: alto fila: i columna: j [
     | celdaMorph etiqueta juegador |
-	 NumeroJugador :=0 .
     celdaMorph := Morph new.  "Crear un Morph directamente para representar la celda"
 	 COLORCELDA:= Color random.
 	 celdaMorph color: COLORCELDA.  "Asignar un color aleatorio inicial"
@@ -30,8 +29,8 @@ Celda >> CrearCelda: ancho altoo: alto fila: i columna: j [
 	
 	 
 	 "Guardar las posiciones X e Y de la celda"
-    self setX: i.  "Guardar posición X"
-    self setY: j.  "Guardar posición Y"
+    self setX: i.  "Guardar posición X" 
+    self setY: j.  "Guardar posición Y" 
 	  "crea jugadores"
 	
 	  juegador:= Jugador new.
@@ -40,7 +39,7 @@ Celda >> CrearCelda: ancho altoo: alto fila: i columna: j [
 	  "Asignar la celda al territorio del jugador"
      juegador AgregarTerritorio: {self}.
 	 	
-
+	 Propietario := juegador.
     "Configurar acción para cambiar de color al hacer clic"
     celdaMorph on: #mouseUp send: #value to: [ celdaMorph color: Color random ].
 
@@ -48,6 +47,11 @@ Celda >> CrearCelda: ancho altoo: alto fila: i columna: j [
       Transcript show: 'Celda asignada al territorio del jugador ', i asString; cr.
  
     ^ celdaMorph  "Devolver el Morph creado"
+]
+
+{ #category : 'as yet unclassified' }
+Celda >> GetPropietario [
+^Propietario.
 ]
 
 { #category : 'as yet unclassified' }

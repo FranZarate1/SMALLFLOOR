@@ -4,7 +4,9 @@ Class {
 	#instVars : [
 		'juego_del_duelo',
 		'jugador1',
-		'jugador2'
+		'jugador2',
+		'ganador',
+		'perdedor'
 	],
 	#category : 'JUEGUITO',
 	#package : 'JUEGUITO'
