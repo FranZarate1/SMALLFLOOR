@@ -36,7 +36,6 @@ Tablero >> Crear_Tablero: filap columna: columnap [
     "Crear la matriz para almacenar las celdas"
     matrizCeldas := Array new: filas.  "Crea un arreglo para las filas"
     1 to: filas do: [:i | matrizCeldas at: i put: (Array new: columnas)].
-
     "Crear y posicionar las celdas directamente en el tablero"
     yOffset := 0.
     1 to: filas do: [:i | 
@@ -59,38 +58,67 @@ Tablero >> Crear_Tablero: filap columna: columnap [
         yOffset := yOffset + altoCelda.
     ].
 
+    "Almacenar la matriz como un atributo de la clase para acceso posterior"
+    Matrix := matrizCeldas.
+
     "Agregar el tablero dentro de la ventana"
     ventana addMorph: tablero.
-
-   "Almacenar la matriz como un atributo de la clase para acceso posterior"
-    Matrix := matrizCeldas.
 
     "Agregar otra ventana para poner un botón e iniciar la búsqueda del jugador"
     botonB := SimpleButtonMorph new.
     botonB label: 'Iniciar Juego'; 
         target: self; 
-        actionSelector: #EncontrarCeldaRandom ; 
+        actionSelector: #EncontrarCeldaRandom;
         position: 375@830.  "Primer N° posición horizontal y el segundo la vertical"
     ventana2 addMorph: botonB.
     ventana2 addMorph: ventana.
 
     ventana2 openInWorld.
-
- 
+   
 
 ]
 
 { #category : 'as yet unclassified' }
 Tablero >> EncontrarCeldaRandom [ 
-    | filaAleatoria columnaAleatoria celdaAleatoria |
-    
+    | filaAleatoria columnaAleatoria celdaAleatoria celdaSeleccionada |
+
     "Generar índices aleatorios para fila y columna"
     filaAleatoria := (1 to: Matrix size) atRandom.
     columnaAleatoria := (1 to: (Matrix at: filaAleatoria) size) atRandom.
-    
+
     "Obtener la celda aleatoria"
     celdaAleatoria := (Matrix at: filaAleatoria) at: columnaAleatoria.
-    
+
+    "Restaurar la celda previamente seleccionada si existe"
+    celdaSeleccionada ifNotNil: [
+        celdaSeleccionada borderWidth: 2.
+        celdaSeleccionada borderColor: Color black.
+    ].
+
+    "Hacer que todas las celdas titilen"
+    Matrix do: [:fila | fila do: [:celda | self titilarCelda: celda]].
+
+    "Marcar la nueva celda seleccionada"
+    celdaAleatoria borderWidth: 4.
+    celdaAleatoria borderColor: Color red.
+
+    "Guardar la referencia de la celda seleccionada"
+    celdaSeleccionada := celdaAleatoria.
+
     ^ celdaAleatoria
 
+]
+
+{ #category : 'as yet unclassified' }
+Tablero >> titilarCelda: celda [
+    | originalColor|
+    originalColor := celda color.
+    [ 10 timesRepeat: [
+        celda color: Color yellow.
+        (Delay forMilliseconds: 200) wait.
+        celda color: Color blue.
+        (Delay forMilliseconds: 200) wait.
+    ].
+    celda color: originalColor.  "Restaurar el color original al final"
+    ] fork.
 ]
