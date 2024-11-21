@@ -15,8 +15,8 @@ Class {
 Celda >> CrearCelda: ancho altoo: alto fila: i columna: j [
     | celdaMorph etiqueta juegador |
     celdaMorph := Morph new.  "Crear un Morph directamente para representar la celda"
-	 COLORCELDA:= Color random.
-	 celdaMorph color: COLORCELDA.  "Asignar un color aleatorio inicial"
+    COLORCELDA := Color random.
+    celdaMorph color: COLORCELDA.  "Asignar un color aleatorio inicial"
     celdaMorph extent: ancho @ alto.  "Asignar el tamaño de la celda"
     celdaMorph borderWidth: 2.  "Asignar el ancho del borde"
     celdaMorph borderColor: Color black.  "Asignar el color del borde"
@@ -26,27 +26,27 @@ Celda >> CrearCelda: ancho altoo: alto fila: i columna: j [
     etiqueta contents: 'Jugador ', i asString, '-', j asString.
     etiqueta center: celdaMorph center.  "Centrar la etiqueta dentro de la celda"
     celdaMorph addMorph: etiqueta.
-	
-	 
-	 "Guardar las posiciones X e Y de la celda"
+    
+    "Guardar las posiciones X e Y de la celda"
     self setX: i.  "Guardar posición X" 
     self setY: j.  "Guardar posición Y" 
-	  "crea jugadores"
-	
-	  juegador:= Jugador new.
-	  juegador CrearJugador: i  color: COLORCELDA . 	
- 	  
-	  "Asignar la celda al territorio del jugador"
-     juegador AgregarTerritorio: {self}.
-	 	
-	 Propietario := juegador.
+    "crea jugadores"
+    
+    juegador := Jugador new.
+    juegador CrearJugador: i  color: COLORCELDA .   
+    
+    "Asignar la celda al territorio del jugador"
+    juegador AgregarTerritorio: {self}.
+    
+    Propietario := juegador.
     "Configurar acción para cambiar de color al hacer clic"
     celdaMorph on: #mouseUp send: #value to: [ celdaMorph color: Color random ].
 
-      Transcript show: 'Celda creada en fila: ', i asString, ', columna: ', j asString; cr.
-      Transcript show: 'Celda asignada al territorio del jugador ', i asString; cr.
+    Transcript show: 'Celda creada en fila: ', i asString, ', columna: ', j asString; cr.
+    Transcript show: 'Celda asignada al territorio del jugador ', i asString; cr.
  
     ^ celdaMorph  "Devolver el Morph creado"
+ 
 ]
 
 { #category : 'as yet unclassified' }
