@@ -11,14 +11,14 @@ Class {
 
 { #category : 'as yet unclassified' }
 Tablero >> Crear_Tablero: filap columna: columnap [ 
-        | tablero ventana ventana2 filas columnas celda anchoCelda altoCelda totalAncho totalAlto matrizCeldas xOffset yOffset botonB |
+                | tablero ventana ventana2 filas columnas celda anchoCelda altoCelda totalAncho totalAlto matrizCeldas xOffset yOffset botonB |
 
         ventana2 := SystemWindow new.
         ventana2 setLabel: 'Tablero 4x4'.
-        ventana2 extent: 800@870.  "Tamaño inicial de la ventana."
+        ventana2 extent: 600 @ 700.  "Tamaño inicial de la ventana."
 
         ventana := SystemWindow new.
-        ventana extent: 800@800.  "Tamaño inicial de la ventana."
+        ventana extent: 600 @ 550.  "Tamaño inicial de la ventana."
 
         filas := filap.  "Número de filas"
         columnas := columnap.  "Número de columnas"
@@ -37,6 +37,7 @@ Tablero >> Crear_Tablero: filap columna: columnap [
         "Crear la matriz para almacenar las celdas"
         matrizCeldas := Array new: filas.  "Crea un arreglo para las filas"
         1 to: filas do: [:i | matrizCeldas at: i put: (Array new: columnas)].
+        
         "Crear y posicionar las celdas directamente en el tablero"
         yOffset := 0.
         1 to: filas do: [:i | 
@@ -44,7 +45,7 @@ Tablero >> Crear_Tablero: filap columna: columnap [
             1 to: columnas do: [:j | 
                 "Crear la celda con tamaño y posición específicos"
                 celda := Celda new CrearCelda: anchoCelda altoo: altoCelda fila: i columna: j.
-                celda position: xOffset@yOffset.  "Colocar la celda en su posición en el tablero"
+                celda position: xOffset @ yOffset.  "Colocar la celda en su posición en el tablero"
                 
                 "Agregar la celda a la matriz"
                 (matrizCeldas at: i) at: j put: celda.
@@ -70,42 +71,140 @@ Tablero >> Crear_Tablero: filap columna: columnap [
         botonB label: 'Iniciar Juego'; 
             target: self; 
             actionSelector: #EncontrarCeldaRandom;
-            position: 375@830.  "Primer N° posición horizontal y el segundo la vertical"
+            position: 375 @ 630.  "Primer N° posición horizontal y el segundo la vertical"
         ventana2 addMorph: botonB.
         ventana2 addMorph: ventana.
 
         ventana2 openInWorld.
-    
+]
 
+{ #category : 'as yet unclassified' }
+Tablero >> ElegirCeldaAdyacente [
+        | fila columna celdasAdyacentes celdaAdyacente |
+
+        "Obtener la posición de la celda seleccionada"
+        fila := celdaSeleccionada getX.
+        columna := celdaSeleccionada getY.
+
+        "Inicializar la colección de celdas adyacentes"
+        celdasAdyacentes := OrderedCollection new.
+
+        "Agregar celdas adyacentes (arriba, abajo, izquierda, derecha) si están dentro de los límites"
+        (fila > 1) ifTrue: [ celdasAdyacentes add: (Matrix at: fila - 1) at: columna ].  "Arriba"
+        (fila < Matrix size) ifTrue: [ celdasAdyacentes add: (Matrix at: fila + 1) at: columna ].  "Abajo"
+        (columna > 1) ifTrue: [ celdasAdyacentes add: (Matrix at: fila) at: columna - 1 ].  "Izquierda"
+        (columna < (Matrix at: fila) size) ifTrue: [ celdasAdyacentes add: (Matrix at: fila) at: columna + 1 ].  "Derecha"
+
+        "Pintar las celdas adyacentes"
+        celdasAdyacentes do: [:celda | celda color: Color green].
+
+        "Seleccionar una celda adyacente aleatoria"
+        celdaAdyacente := celdasAdyacentes atRandom.
+
+        "Marcar la nueva celda seleccionada"
+        celdaSeleccionada borderWidth: 2.
+        celdaSeleccionada borderColor: Color black.
+        celdaAdyacente borderWidth: 4.
+        celdaAdyacente borderColor: Color red.
+
+        "Guardar la referencia de la nueva celda seleccionada"
+        celdaSeleccionada := celdaAdyacente.
+
+        ^ celdaAdyacente
+]
+
+{ #category : 'as yet unclassified' }
+Tablero >> ElegirCeldaAdyacente:uncelda [
+        | fila columna celdasAdyacentes celdaAdyacente |
+
+        "Obtener la posición de la celda seleccionada"
+        fila := celdaSeleccionada getX.
+        columna := celdaSeleccionada getY.
+
+        "Inicializar la colección de celdas adyacentes"
+        celdasAdyacentes := OrderedCollection new.
+
+        "Agregar celdas adyacentes (arriba, abajo, izquierda, derecha) si están dentro de los límites"
+        (fila > 1) ifTrue: [ celdasAdyacentes add: (Matrix at: fila - 1) at: columna ].  "Arriba"
+        (fila < Matrix size) ifTrue: [ celdasAdyacentes add: (Matrix at: fila + 1) at: columna ].  "Abajo"
+        (columna > 1) ifTrue: [ celdasAdyacentes add: (Matrix at: fila) at: columna - 1 ].  "Izquierda"
+        (columna < (Matrix at: fila) size) ifTrue: [ celdasAdyacentes add: (Matrix at: fila) at: columna + 1 ].  "Derecha"
+
+        "Pintar las celdas adyacentes"
+        celdasAdyacentes do: [:celda | celda color: Color green].
+
+        "Seleccionar una celda adyacente aleatoria"
+        celdaAdyacente := celdasAdyacentes atRandom.
+
+        "Marcar la nueva celda seleccionada"
+        celdaSeleccionada borderWidth: 2.
+        celdaSeleccionada borderColor: Color black.
+        celdaAdyacente borderWidth: 4.
+        celdaAdyacente borderColor: Color red.
+
+        "Guardar la referencia de la nueva celda seleccionada"
+        celdaSeleccionada := celdaAdyacente.
+
+        ^ celdaAdyacente
 ]
 
 { #category : 'as yet unclassified' }
 Tablero >> EncontrarCeldaRandom [ 
-      | filaAleatoria columnaAleatoria celdaAleatoria |
+| filaAleatoria columnaAleatoria celdaAleatoria |
 
-        "Generar índices aleatorios para fila y columna"
-        filaAleatoria := (1 to: Matrix size) atRandom.
-        columnaAleatoria := (1 to: (Matrix at: filaAleatoria) size) atRandom.
+    "Generar índices aleatorios para fila y columna"
+    filaAleatoria := (1 to: Matrix size) atRandom.
+    columnaAleatoria := (1 to: (Matrix at: filaAleatoria) size) atRandom.
 
-        "Obtener la celda aleatoria"
-        celdaAleatoria := (Matrix at: filaAleatoria) at: columnaAleatoria.
+    "Obtener la celda aleatoria"
+    celdaAleatoria := (Matrix at: filaAleatoria) at: columnaAleatoria.
 
-        "Restaurar la celda previamente seleccionada si existe"
-        celdaSeleccionada ifNotNil: [
-            celdaSeleccionada borderWidth: 2.
-            celdaSeleccionada borderColor: Color black.
-        ].
+    "Restaurar la celda previamente seleccionada si existe"
+    celdaSeleccionada ifNotNil: [
+        celdaSeleccionada borderWidth: 2.
+        celdaSeleccionada borderColor: Color black.
+    ].
 
-        "Hacer que todas las celdas titilen"
-        Matrix do: [:fila | fila do: [:celda | self titilarCelda: celda after: []]].
+    "Hacer que todas las celdas titilen"
+    Matrix do: [:fila | fila do: [:celda | self titilarCelda: celda after: []]].
 
-        "Marcar la nueva celda seleccionada después de que termine de titilar"
-        self titilarCelda: celdaAleatoria after: [
-            celdaAleatoria borderWidth: 4.
-            celdaAleatoria borderColor: Color red.
-            celdaSeleccionada := celdaAleatoria.
-        ].
-    
+    "Guardar la referencia de la celda seleccionada"
+    celdaSeleccionada := celdaAleatoria.
+
+    "Marcar la nueva celda seleccionada"
+    celdaSeleccionada borderWidth: 4.
+    celdaSeleccionada borderColor: Color red.
+
+    "Llamar al método para elegir y marcar las celdas adyacentes"
+    self marcarCeldasAdyacentes: filaAleatoria columna: columnaAleatoria.
+
+    ^ celdaAleatoria
+]
+
+{ #category : 'as yet unclassified' }
+Tablero >> marcarCeldasAdyacentes: fila columna: columna [ 
+    | posicionesAdyacentes adyacentes |
+
+    "Definir las posiciones adyacentes (arriba, abajo, izquierda, derecha)"
+    posicionesAdyacentes := {
+        (fila - 1) @ columna.  "Arriba"
+        (fila + 1) @ columna.  "Abajo"
+        fila @ (columna - 1).  "Izquierda"
+        fila @ (columna + 1).  "Derecha"
+    }.
+
+    "Filtrar las posiciones que están dentro de los límites del tablero"
+    adyacentes := posicionesAdyacentes select: [:pos |
+        (pos x between: 1 and: Matrix size) and: [pos y between: 1 and: (Matrix at: 1) size]
+    ].
+
+    "Marcar las celdas adyacentes"
+    adyacentes do: [:pos |
+        | celdaAdyacente |
+        celdaAdyacente := (Matrix at: pos x) at: pos y.
+        celdaAdyacente borderWidth: 4.
+        celdaAdyacente borderColor: Color green .
+]
 ]
 
 { #category : 'as yet unclassified' }

@@ -230,8 +230,8 @@ ventana addMorph: resultadoMorph.
     (Delay forSeconds: 2) wait.
     
     "Después de mostrar todos los números, solicitar las respuestas de los jugadores"
-    usuario1 := UIManager default request: 'Jugador 1, ingrese su respuesta:'.
-    usuario2 := UIManager default request: 'Jugador 2, ingrese su respuesta:'.
+    usuario1 := (UIManager default request: 'Jugador 1, ingrese su respuesta:')asInteger.
+    usuario2 := (UIManager default request: 'Jugador 2, ingrese su respuesta:')asInteger.
 
     "Calcular las diferencias de cada jugador con la suma correcta"
     diferencia1 := (usuario1 asInteger - suma abs).
