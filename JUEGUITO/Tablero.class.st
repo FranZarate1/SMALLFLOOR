@@ -79,6 +79,76 @@ Tablero >> Crear_Tablero: filap columna: columnap [
 ]
 
 { #category : 'as yet unclassified' }
+Tablero >> ElegirCeldaAdyacente [
+        | fila columna celdasAdyacentes celdaAdyacente |
+
+        "Obtener la posición de la celda seleccionada"
+        fila := celdaSeleccionada getX.
+        columna := celdaSeleccionada getY.
+
+        "Inicializar la colección de celdas adyacentes"
+        celdasAdyacentes := OrderedCollection new.
+
+        "Agregar celdas adyacentes (arriba, abajo, izquierda, derecha) si están dentro de los límites"
+        (fila > 1) ifTrue: [ celdasAdyacentes add: (Matrix at: fila - 1) at: columna ].  "Arriba"
+        (fila < Matrix size) ifTrue: [ celdasAdyacentes add: (Matrix at: fila + 1) at: columna ].  "Abajo"
+        (columna > 1) ifTrue: [ celdasAdyacentes add: (Matrix at: fila) at: columna - 1 ].  "Izquierda"
+        (columna < (Matrix at: fila) size) ifTrue: [ celdasAdyacentes add: (Matrix at: fila) at: columna + 1 ].  "Derecha"
+
+        "Pintar las celdas adyacentes"
+        celdasAdyacentes do: [:celda | celda color: Color green].
+
+        "Seleccionar una celda adyacente aleatoria"
+        celdaAdyacente := celdasAdyacentes atRandom.
+
+        "Marcar la nueva celda seleccionada"
+        celdaSeleccionada borderWidth: 2.
+        celdaSeleccionada borderColor: Color black.
+        celdaAdyacente borderWidth: 4.
+        celdaAdyacente borderColor: Color red.
+
+        "Guardar la referencia de la nueva celda seleccionada"
+        celdaSeleccionada := celdaAdyacente.
+
+        ^ celdaAdyacente
+]
+
+{ #category : 'as yet unclassified' }
+Tablero >> ElegirCeldaAdyacente:uncelda [
+        | fila columna celdasAdyacentes celdaAdyacente |
+"comit"
+        "Obtener la posición de la celda seleccionada"
+        fila := celdaSeleccionada getX.
+        columna := celdaSeleccionada getY.
+
+        "Inicializar la colección de celdas adyacentes"
+        celdasAdyacentes := OrderedCollection new.
+
+        "Agregar celdas adyacentes (arriba, abajo, izquierda, derecha) si están dentro de los límites"
+        (fila > 1) ifTrue: [ celdasAdyacentes add: (Matrix at: fila - 1) at: columna ].  "Arriba"
+        (fila < Matrix size) ifTrue: [ celdasAdyacentes add: (Matrix at: fila + 1) at: columna ].  "Abajo"
+        (columna > 1) ifTrue: [ celdasAdyacentes add: (Matrix at: fila) at: columna - 1 ].  "Izquierda"
+        (columna < (Matrix at: fila) size) ifTrue: [ celdasAdyacentes add: (Matrix at: fila) at: columna + 1 ].  "Derecha"
+
+        "Pintar las celdas adyacentes"
+        celdasAdyacentes do: [:celda | celda color: Color green].
+
+        "Seleccionar una celda adyacente aleatoria"
+        celdaAdyacente := celdasAdyacentes atRandom.
+
+        "Marcar la nueva celda seleccionada"
+        celdaSeleccionada borderWidth: 2.
+        celdaSeleccionada borderColor: Color black.
+        celdaAdyacente borderWidth: 4.
+        celdaAdyacente borderColor: Color red.
+
+        "Guardar la referencia de la nueva celda seleccionada"
+        celdaSeleccionada := celdaAdyacente.
+
+        ^ celdaAdyacente
+]
+
+{ #category : 'as yet unclassified' }
 Tablero >> EncontrarCeldaRandom [ 
     | filaAleatoria columnaAleatoria celdaAleatoria totalCeldas contador |
 
