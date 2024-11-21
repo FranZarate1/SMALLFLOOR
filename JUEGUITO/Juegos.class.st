@@ -111,6 +111,72 @@ ventana openInWorld.
 ]
 
 { #category : 'as yet unclassified' }
+Juegos >> NumeroSecreto [
+| secretNumber1 secretNumber2 guessedNumber1 guessedNumber2 attempts1 attempts2 playerTurn gameEnded | 
+
+"Inicializar los números secretos y los intentos"
+secretNumber1 := (1 to: 100) atRandom.  "Número secreto del jugador 1"
+secretNumber2 := (1 to: 100) atRandom.  "Número secreto del jugador 2"
+guessedNumber1 := 0.
+guessedNumber2 := 0.
+attempts1 := 0.
+attempts2 := 0.
+playerTurn := 1. "Jugador 1 empieza"
+gameEnded := false. "Controla si el juego ha terminado"
+
+"Repetir hasta que ambos jugadores tengan su último intento"
+[
+    gameEnded not
+] whileTrue: [
+    playerTurn = 1
+        ifTrue: [
+            "Turno del jugador 1"
+            guessedNumber1 := (UIManager default request: 'Jugador 1, Ingresa un número entre 1 y 100:' initialAnswer: '') asInteger.
+            attempts1 := attempts1 + 1.
+            guessedNumber1 = secretNumber1
+                ifTrue: [
+                    UIManager default inform: '¡Jugador 1 ha acertado su número en ', attempts1 printString, ' intentos!'.
+                    playerTurn := 2. "Permitir al jugador 2 su último intento"
+                ]
+                ifFalse: [
+                    guessedNumber1 < secretNumber1
+                        ifTrue: [UIManager default inform: '¡Jugador 1, demasiado bajo! Intenta nuevamente.' ]
+                        ifFalse: [UIManager default inform: '¡Jugador 1, demasiado alto! Intenta nuevamente.' ].
+                    playerTurn := 2. "Cambio de turno al jugador 2"
+                ].
+        ]
+        ifFalse: [
+            "Turno del jugador 2"
+            guessedNumber2 := (UIManager default request: 'Jugador 2, Ingresa un número entre 1 y 100:' initialAnswer: '') asInteger.
+            attempts2 := attempts2 + 1.
+            guessedNumber2 = secretNumber2
+                ifTrue: [
+                    UIManager default inform: '¡Jugador 2 ha acertado su número en ', attempts2 printString, ' intentos!'.
+                ]
+                ifFalse: [
+                    guessedNumber2 < secretNumber2
+                        ifTrue: [UIManager default inform: '¡Jugador 2, demasiado bajo! Intenta nuevamente.' ]
+                        ifFalse: [UIManager default inform: '¡Jugador 2, demasiado alto! Intenta nuevamente.' ].
+                ].
+            "Finalizar el juego si el jugador 1 ya acertó"
+            gameEnded := guessedNumber1 = secretNumber1 or: [guessedNumber2 = secretNumber2].
+            playerTurn := 1. "Cambio de turno al jugador 1"
+        ].
+].
+
+"Determinar el resultado"
+(guessedNumber1 = secretNumber1 and: [guessedNumber2 = secretNumber2])
+    ifTrue: [
+        UIManager default inform: '¡Empate! Ambos jugadores acertaron en el mismo intento. Comenzará un desempate.'.
+        ^self reinitializeGame.
+    ].
+guessedNumber1 = secretNumber1
+    ifTrue: [ UIManager default inform: '¡Jugador 1 gana! El jugador 2 no logró acertar.' ].
+guessedNumber2 = secretNumber2
+    ifTrue: [ UIManager default inform: '¡Jugador 2 gana! El jugador 1 no logró acertar.' ].
+]
+
+{ #category : 'as yet unclassified' }
 Juegos >> SumaTrix [
 | numeros suma usuario1 usuario2 diferencia1 diferencia2 resultado morph ventana resultadoMorph |
 
