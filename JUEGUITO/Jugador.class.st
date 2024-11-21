@@ -22,14 +22,14 @@ Jugador >> AgregarTerritorio: otroTerritorio [
 ]
 
 { #category : 'as yet unclassified' }
-Jugador >> CrearJugador: unNombre color: unColor [
-   
-    self SetNombre: unNombre .
-	 self SetColor: unColor.
-	 territorio:=#().
-    "Aquí puedes agregar el jugador a una colección si necesitas mantener un registro de ellos"
-     Transcript show: 'Jugador creado: ', unNombre  asString, ' con color: ', unColor printString; cr.
-    ^self.
+Jugador >> CrearJugador: unNombre color: unColor [ 
+        self SetNombre: unNombre.
+        self SetColor: unColor.
+        territorio := #().
+        "Aquí puedes agregar el jugador a una colección si necesitas mantener un registro de ellos"
+        Transcript show: 'Jugador creado: ', unNombre asString, ' con color: ', unColor printString; cr.
+        ^ self.
+    
 
 ]
 
