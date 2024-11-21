@@ -62,18 +62,35 @@ Tablero >> Crear_Tablero: filap columna: columnap [
     "Agregar el tablero dentro de la ventana"
     ventana addMorph: tablero.
 
+   "Almacenar la matriz como un atributo de la clase para acceso posterior"
+    Matrix := matrizCeldas.
+
     "Agregar otra ventana para poner un botón e iniciar la búsqueda del jugador"
     botonB := SimpleButtonMorph new.
     botonB label: 'Iniciar Juego'; 
         target: self; 
-        actionSelector: #Buscar_Ju; 
+        actionSelector: #EncontrarCeldaRandom ; 
         position: 375@830.  "Primer N° posición horizontal y el segundo la vertical"
     ventana2 addMorph: botonB.
     ventana2 addMorph: ventana.
 
     ventana2 openInWorld.
 
-    "Almacenar la matriz como un atributo de la clase para acceso posterior"
-    Matrix := matrizCeldas.
+ 
+
+]
+
+{ #category : 'as yet unclassified' }
+Tablero >> EncontrarCeldaRandom [ 
+    | filaAleatoria columnaAleatoria celdaAleatoria |
+    
+    "Generar índices aleatorios para fila y columna"
+    filaAleatoria := (1 to: Matrix size) atRandom.
+    columnaAleatoria := (1 to: (Matrix at: filaAleatoria) size) atRandom.
+    
+    "Obtener la celda aleatoria"
+    celdaAleatoria := (Matrix at: filaAleatoria) at: columnaAleatoria.
+    
+    ^ celdaAleatoria
 
 ]
