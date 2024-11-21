@@ -116,7 +116,7 @@ Tablero >> ElegirCeldaAdyacente [
 { #category : 'as yet unclassified' }
 Tablero >> ElegirCeldaAdyacente:uncelda [
         | fila columna celdasAdyacentes celdaAdyacente |
-
+"comit"
         "Obtener la posición de la celda seleccionada"
         fila := celdaSeleccionada getX.
         columna := celdaSeleccionada getY.
