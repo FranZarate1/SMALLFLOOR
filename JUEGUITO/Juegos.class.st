@@ -10,10 +10,8 @@ Class {
 
 { #category : 'as yet unclassified' }
 Juegos >> BatallaClicks [ 
-| juego | "Definimos un bloque para encapsular el juego"
 
-juego := [
-    | ventana boton contador1 contador2 jugador1 jugador2 turnoMaximo ganador tiempoLabel tiempoRestante procesoTiempo turnoActual turnoLabel tiempoEsperaLabel tiempoEspera ganadorLabel botonProceso botonDireccionX botonDireccionY random |
+| ventana boton contador1 contador2 jugador1 jugador2 turnoMaximo ganador tiempoLabel tiempoRestante procesoTiempo turnoActual turnoLabel tiempoEsperaLabel tiempoEspera ganadorLabel botonProceso botonDireccionX botonDireccionY random|
 
     "Inicializa contadores y jugadores"
     contador1 := 0.
@@ -151,7 +149,7 @@ juego := [
         			ventana delete.
 					 
                 "Reiniciar el juego"
-                juego value. "Llama al bloque nuevamente"
+                self BatallaClicks .
             ]
             ifFalse: [
                 ganadorLabel contents: 'Juego terminado.
@@ -161,10 +159,8 @@ Ganador: ', ganador.
                 ganadorLabel changed.
             ].
     ] fork.
-].
 
-"Invocar el juego inicialmente"
-juego value.
+
 
 
 ]
@@ -272,6 +268,11 @@ guessedNumber2 = secretNumber2
         mensajeLabel contents: '¡Jugador 2 gana! El jugador 1 no logró acertar.'.
         mensajeLabel changed.
     ].
+]
+
+{ #category : 'as yet unclassified' }
+Juegos >> ReiniciarClicks [
+	self BatallaClicks .
 ]
 
 { #category : 'as yet unclassified' }
