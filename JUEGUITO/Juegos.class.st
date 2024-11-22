@@ -9,154 +9,169 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-Juegos >> BatallaClicks [
-| ventana boton contador1 contador2 jugador1 jugador2 turnoMaximo ganador tiempoLabel tiempoRestante procesoTiempo turnoActual turnoLabel tiempoEsperaLabel tiempoEspera ganadorLabel botonProceso botonDireccionX botonDireccionY random |
+Juegos >> BatallaClicks [ 
+| juego | "Definimos un bloque para encapsular el juego"
 
-"Inicializa contadores y jugadores"
-contador1 := 0.
-contador2 := 0.
-jugador1 := 'Jugador 1'.
-jugador2 := 'Jugador 2'.
-turnoMaximo := 2.
-turnoActual := 1.
-tiempoRestante := 10. "10 segundos para cada turno"
-tiempoEspera := 3. "3 segundos de pausa entre turnos"
+juego := [
+    | ventana boton contador1 contador2 jugador1 jugador2 turnoMaximo ganador tiempoLabel tiempoRestante procesoTiempo turnoActual turnoLabel tiempoEsperaLabel tiempoEspera ganadorLabel botonProceso botonDireccionX botonDireccionY random |
 
-"Inicializa la dirección del movimiento del botón"
-botonDireccionX := 5.
-botonDireccionY := 5.
+    "Inicializa contadores y jugadores"
+    contador1 := 0.
+    contador2 := 0.
+    jugador1 := 'Jugador 1'.
+    jugador2 := 'Jugador 2'.
+    turnoMaximo := 2.
+    turnoActual := 1.
+    tiempoRestante := 10. "10 segundos para cada turno"
+    tiempoEspera := 3. "3 segundos de pausa entre turnos"
 
-"Crear la ventana principal"
-ventana := Morph new.
-ventana extent: 500@500. "Tamaño de la ventana"
-ventana openInWorld.
+    "Inicializa la dirección del movimiento del botón"
+    botonDireccionX := 5.
+    botonDireccionY := 5.
 
-"Crear el botón de clics"
-boton := SimpleButtonMorph new.
-boton label: 'Haz clic aquí';
-    extent: 150@150.
+    "Crear la ventana principal"
+    ventana := Morph new.
+    ventana extent: 500@500. "Tamaño de la ventana"
+    ventana openInWorld.
 
-"Posicionar el botón dentro de los límites de la ventana"
-boton position: (ventana innerBounds center - (boton extent // 2)).
-ventana addMorph: boton.
+    "Crear el botón de clics"
+    boton := SimpleButtonMorph new.
+    boton label: 'Haz clic aquí'; extent: 150@150.
 
-"Acción del botón"
-boton on: #mouseDown send: #value to: [
-    (tiempoRestante > 0) ifTrue: [
-        turnoActual = 1
-            ifTrue: [contador1 := contador1 + 1]
-            ifFalse: [contador2 := contador2 + 1].
-    ].
-].
+    "Posicionar el botón dentro de los límites de la ventana"
+    boton position: (ventana innerBounds center - (boton extent // 2)).
+    ventana addMorph: boton.
 
-"Crear la etiqueta para mostrar el tiempo restante"
-tiempoLabel := StringMorph new.
-tiempoLabel contents: 'Tiempo restante: ', tiempoRestante printString, ' segundos';
-    position: 140@50.
-ventana addMorph: tiempoLabel.
-
-"Crear la etiqueta para mostrar el turno actual"
-turnoLabel := StringMorph new.
-turnoLabel contents: 'Turno de: ', (turnoActual = 1 ifTrue: [jugador1] ifFalse: [jugador2]).
-turnoLabel position: 140@80.
-ventana addMorph: turnoLabel.
-
-"Crear la etiqueta para mostrar el tiempo de espera entre turnos"
-tiempoEsperaLabel := StringMorph new.
-tiempoEsperaLabel contents: ''.
-tiempoEsperaLabel position: 140@110.
-ventana addMorph: tiempoEsperaLabel.
-
-"Crear la etiqueta para mostrar el ganador"
-ganadorLabel := StringMorph new.
-ganadorLabel contents: ''.
-ganadorLabel position: 200@170.
-ventana addMorph: ganadorLabel.
-
-"Proceso para mover el botón"
-random := Random new.
-botonProceso := [
-    [ true ] whileTrue: [
-        | nuevaPosicionX nuevaPosicionY ventanaBounds |
-
-        (Delay forMilliseconds: 50) wait. "Esperar un intervalo corto para suavizar el movimiento"
-
-        "Obtener los límites de la ventana"
-        ventanaBounds := ventana innerBounds.
-
-        "Calcular la nueva posición del botón"
-        nuevaPosicionX := boton position x + botonDireccionX.
-        nuevaPosicionY := boton position y + botonDireccionY.
-
-        "Determinar si el botón rebota en los bordes de la ventana"
-        (nuevaPosicionX < ventanaBounds left or: [ nuevaPosicionX + boton width > ventanaBounds right ]) ifTrue: [ botonDireccionX := botonDireccionX negated ].
-        (nuevaPosicionY < ventanaBounds top or: [ nuevaPosicionY + boton height > ventanaBounds bottom ]) ifTrue: [ botonDireccionY := botonDireccionY negated ].
-
-        "Actualizar la posición del botón"
-        boton position: nuevaPosicionX @ nuevaPosicionY.
-    ].
-] fork.
-
-"Proceso para actualizar el tiempo y alternar turnos"
-procesoTiempo := [
-    [ turnoActual <= turnoMaximo ] whileTrue: [
-        tiempoRestante := 10. "Restablece el tiempo a 10 segundos para cada turno"
-        tiempoEsperaLabel contents: ''.
-        tiempoEsperaLabel changed.
-
-        [ tiempoRestante > 0 ] whileTrue: [
-            (Delay forSeconds: 1) wait.
-            tiempoRestante := tiempoRestante - 1.
-            tiempoLabel contents: 'Tiempo restante: ', tiempoRestante printString, ' segundos'.
-            tiempoLabel changed. "Forzar actualización de la etiqueta de tiempo"
-        ].
-
-        "Quitar el botón durante el tiempo de espera"
-        ventana removeMorph: boton.
-
-        "Cambiar turno al finalizar el tiempo"
-        turnoActual := turnoActual + 1.
-        (turnoActual <= turnoMaximo) ifTrue: [
-            "Pausa entre turnos"
-            tiempoEsperaLabel contents: 'Esperando el siguiente turno...';
-                changed.
-            (Delay forSeconds: tiempoEspera) wait.
-
-            turnoLabel contents: 'Turno de: ', (turnoActual = 1 ifTrue: [jugador1] ifFalse: [jugador2]).
-            turnoLabel changed. "Actualizar etiqueta del turno"
-
-            "Reaparecer el botón al inicio del turno"
-            ventana addMorph: boton.
+    "Acción del botón"
+    boton on: #mouseDown send: #value to: [
+        (tiempoRestante > 0) ifTrue: [
+            turnoActual = 1
+                ifTrue: [contador1 := contador1 + 1]
+                ifFalse: [contador2 := contador2 + 1].
         ].
     ].
-    [
-    "Determinar ganador al finalizar los turnos"
-    ganador := (contador1 > contador2)
-        ifTrue: [jugador1]
-        ifFalse: [contador2 > contador1 ifTrue: [jugador2] ifFalse: ['Empate']].
 
-    "Mostrar el resultado en la misma ventana"
-    ganador = 'Empate'
-        ifTrue: [
-            ganadorLabel contents: 'Empate! El juego se reiniciará.'.
-            ganadorLabel changed.
-        ]
-        ifFalse: [
-            ganadorLabel contents: 'Juego terminado.
+    "Crear la etiqueta para mostrar el tiempo restante"
+    tiempoLabel := StringMorph new.
+    tiempoLabel contents: 'Tiempo restante: ', tiempoRestante printString, ' segundos'; position: 140@50.
+    ventana addMorph: tiempoLabel.
+
+    "Crear la etiqueta para mostrar el turno actual"
+    turnoLabel := StringMorph new.
+    turnoLabel contents: 'Turno de: ', (turnoActual = 1 ifTrue: [jugador1] ifFalse: [jugador2]).
+    turnoLabel position: 140@80.
+    ventana addMorph: turnoLabel.
+
+    "Crear la etiqueta para mostrar el tiempo de espera entre turnos"
+    tiempoEsperaLabel := StringMorph new.
+    tiempoEsperaLabel contents: ''.
+    tiempoEsperaLabel position: 140@110.
+    ventana addMorph: tiempoEsperaLabel.
+
+    "Crear la etiqueta para mostrar el ganador"
+    ganadorLabel := StringMorph new.
+    ganadorLabel contents: ''.
+    ganadorLabel position: 70@170.
+    ventana addMorph: ganadorLabel.
+
+    "Proceso para mover el botón"
+    random := Random new.
+    botonProceso := [
+        [ true ] whileTrue: [
+            | nuevaPosicionX nuevaPosicionY ventanaBounds |
+
+            (Delay forMilliseconds: 50) wait. "Esperar un intervalo corto para suavizar el movimiento"
+
+            "Obtener los límites de la ventana"
+            ventanaBounds := ventana innerBounds.
+
+            "Calcular la nueva posición del botón"
+            nuevaPosicionX := boton position x + botonDireccionX.
+            nuevaPosicionY := boton position y + botonDireccionY.
+
+            "Determinar si el botón rebota en los bordes de la ventana"
+            (nuevaPosicionX < ventanaBounds left or: [ nuevaPosicionX + boton width > ventanaBounds right ]) ifTrue: [ botonDireccionX := botonDireccionX negated ].
+            (nuevaPosicionY < ventanaBounds top or: [ nuevaPosicionY + boton height > ventanaBounds bottom ]) ifTrue: [ botonDireccionY := botonDireccionY negated ].
+
+            "Actualizar la posición del botón"
+            boton position: nuevaPosicionX @ nuevaPosicionY.
+        ].
+    ] fork.
+
+    "Proceso para actualizar el tiempo y alternar turnos"
+    procesoTiempo := [
+        [ turnoActual <= turnoMaximo ] whileTrue: [
+            tiempoRestante := 10. "Restablece el tiempo a 10 segundos para cada turno"
+            tiempoEsperaLabel contents: ''.
+            tiempoEsperaLabel changed.
+
+            [ tiempoRestante > 0 ] whileTrue: [
+                (Delay forSeconds: 1) wait.
+                tiempoRestante := tiempoRestante - 1.
+                tiempoLabel contents: 'Tiempo restante: ', tiempoRestante printString, ' segundos'.
+                tiempoLabel changed. "Forzar actualización de la etiqueta de tiempo"
+            ].
+
+            "Quitar el botón durante el tiempo de espera"
+            ventana removeMorph: boton.
+
+            "Cambiar turno al finalizar el tiempo"
+            turnoActual := turnoActual + 1.
+            (turnoActual <= turnoMaximo) ifTrue: [
+                "Pausa entre turnos"
+                tiempoEsperaLabel contents: 'Esperando el siguiente turno...'; changed.
+                (Delay forSeconds: tiempoEspera) wait.
+
+                turnoLabel contents: 'Turno de: ', (turnoActual = 1 ifTrue: [jugador1] ifFalse: [jugador2]).
+                turnoLabel changed. "Actualizar etiqueta del turno"
+
+                "Reaparecer el botón al inicio del turno en posición dentro de la ventana"
+                boton position: (ventana innerBounds center - (boton extent // 2)).
+                ventana addMorph: boton.
+            ].
+        ].
+
+        "Determinar ganador al finalizar los turnos"
+        ganador := (contador1 > contador2)
+            ifTrue: [jugador1]
+            ifFalse: [contador2 > contador1 ifTrue: [jugador2] ifFalse: ['Empate']].
+
+        "Mostrar el resultado en la misma ventana"
+        ganador = 'Empate'
+            ifTrue: [
+                ganadorLabel contents: 'Empate! El juego se reiniciará.'.
+                ganadorLabel changed.
+                tiempoLabel contents: ''.
+                tiempoLabel changed.
+                turnoLabel contents: ''.
+                turnoLabel changed.
+                (Delay forSeconds: 3) wait. "Esperar 3 segundos antes de reiniciar"
+
+					 "Cerrar la ventana actual antes de reiniciar el juego"
+        			ventana delete.
+					 
+                "Reiniciar el juego"
+                juego value. "Llama al bloque nuevamente"
+            ]
+            ifFalse: [
+                ganadorLabel contents: 'Juego terminado.
 ', jugador1, ': ', contador1 printString, ' clics.
 ', jugador2, ': ', contador2 printString, ' clics.
 Ganador: ', ganador.
-            ganadorLabel changed.
-        ].
-]]fork.
+                ganadorLabel changed.
+            ].
+    ] fork.
+].
 
-"Mostrar la ventana y botón en la pantalla"
-ventana openInWorld.
+"Invocar el juego inicialmente"
+juego value.
+
+
 ]
 
 { #category : 'as yet unclassified' }
 Juegos >> NumeroSecreto [
-| secretNumber1 secretNumber2 guessedNumber1 guessedNumber2 attempts1 attempts2 playerTurn gameEnded | 
+| ventana mensajeLabel secretNumber1 secretNumber2 guessedNumber1 guessedNumber2 attempts1 attempts2 playerTurn gameEnded |
 
 "Inicializar los números secretos y los intentos"
 secretNumber1 := (1 to: 100) atRandom.  "Número secreto del jugador 1"
@@ -168,10 +183,20 @@ attempts2 := 0.
 playerTurn := 1. "Jugador 1 empieza"
 gameEnded := false. "Controla si el juego ha terminado"
 
+"Crear la ventana principal"
+ventana := Morph new.
+ventana extent: 400@200. "Tamaño de la ventana"
+ventana openInWorld.
+
+"Crear la etiqueta para mostrar los mensajes"
+mensajeLabel := StringMorph new.
+mensajeLabel contents: 'Bienvenidos al juego de adivinanza de números!'.
+mensajeLabel position: 55@100.
+mensajeLabel font: (TextStyle defaultFont familyName: 'Arial' pointSize: 16). "Ajustar el tamaño de la fuente"
+ventana addMorph: mensajeLabel.
+
 "Repetir hasta que ambos jugadores tengan su último intento"
-[
-    gameEnded not
-] whileTrue: [
+[ gameEnded not ] whileTrue: [
     playerTurn = 1
         ifTrue: [
             "Turno del jugador 1"
@@ -179,13 +204,20 @@ gameEnded := false. "Controla si el juego ha terminado"
             attempts1 := attempts1 + 1.
             guessedNumber1 = secretNumber1
                 ifTrue: [
-                    UIManager default inform: '¡Jugador 1 ha acertado su número en ', attempts1 printString, ' intentos!'.
+                    mensajeLabel contents: '¡Jugador 1 ha acertado su número en ', attempts1 printString, ' intentos!'.
+                    mensajeLabel changed.
                     playerTurn := 2. "Permitir al jugador 2 su último intento"
                 ]
                 ifFalse: [
                     guessedNumber1 < secretNumber1
-                        ifTrue: [UIManager default inform: '¡Jugador 1, demasiado bajo! Intenta nuevamente.' ]
-                        ifFalse: [UIManager default inform: '¡Jugador 1, demasiado alto! Intenta nuevamente.' ].
+                        ifTrue: [
+                            mensajeLabel contents: '¡Jugador 1, demasiado bajo! Intenta nuevamente.'.
+                            mensajeLabel changed.
+                        ]
+                        ifFalse: [
+                            mensajeLabel contents: '¡Jugador 1, demasiado alto! Intenta nuevamente.'.
+                            mensajeLabel changed.
+                        ].
                     playerTurn := 2. "Cambio de turno al jugador 2"
                 ].
         ]
@@ -195,12 +227,19 @@ gameEnded := false. "Controla si el juego ha terminado"
             attempts2 := attempts2 + 1.
             guessedNumber2 = secretNumber2
                 ifTrue: [
-                    UIManager default inform: '¡Jugador 2 ha acertado su número en ', attempts2 printString, ' intentos!'.
+                    mensajeLabel contents: '¡Jugador 2 ha acertado su número en ', attempts2 printString, ' intentos!'.
+                    mensajeLabel changed.
                 ]
                 ifFalse: [
                     guessedNumber2 < secretNumber2
-                        ifTrue: [UIManager default inform: '¡Jugador 2, demasiado bajo! Intenta nuevamente.' ]
-                        ifFalse: [UIManager default inform: '¡Jugador 2, demasiado alto! Intenta nuevamente.' ].
+                        ifTrue: [
+                            mensajeLabel contents: '¡Jugador 2, demasiado bajo! Intenta nuevamente.'.
+                            mensajeLabel changed.
+                        ]
+                        ifFalse: [
+                            mensajeLabel contents: '¡Jugador 2, demasiado alto! Intenta nuevamente.'.
+                            mensajeLabel changed.
+                        ].
                 ].
             "Finalizar el juego si el jugador 1 ya acertó"
             gameEnded := guessedNumber1 = secretNumber1 or: [guessedNumber2 = secretNumber2].
@@ -211,13 +250,28 @@ gameEnded := false. "Controla si el juego ha terminado"
 "Determinar el resultado"
 (guessedNumber1 = secretNumber1 and: [guessedNumber2 = secretNumber2])
     ifTrue: [
-        UIManager default inform: '¡Empate! Ambos jugadores acertaron en el mismo intento. Comenzará un desempate.'.
-        ^self reinitializeGame.
+        mensajeLabel contents: '¡Empate! Ambos jugadores acertaron en el mismo intento. Comenzará un desempate.'.
+        mensajeLabel changed.
+        "Reiniciar el juego"
+        secretNumber1 := (1 to: 100) atRandom.
+        secretNumber2 := (1 to: 100) atRandom.
+        guessedNumber1 := 0.
+        guessedNumber2 := 0.
+        attempts1 := 0.
+        attempts2 := 0.
+        playerTurn := 1.
+        gameEnded := false.
     ].
 guessedNumber1 = secretNumber1
-    ifTrue: [ UIManager default inform: '¡Jugador 1 gana! El jugador 2 no logró acertar.' ].
+    ifTrue: [
+        mensajeLabel contents: '¡Jugador 1 gana! El jugador 2 no logró acertar.'.
+        mensajeLabel changed.
+    ].
 guessedNumber2 = secretNumber2
-    ifTrue: [ UIManager default inform: '¡Jugador 2 gana! El jugador 1 no logró acertar.' ].
+    ifTrue: [
+        mensajeLabel contents: '¡Jugador 2 gana! El jugador 1 no logró acertar.'.
+        mensajeLabel changed.
+    ].
 ]
 
 { #category : 'as yet unclassified' }
