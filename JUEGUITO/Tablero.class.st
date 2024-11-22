@@ -164,6 +164,15 @@ Tablero >> EncontrarCeldaRandom [
     celdaSeleccionada ifNotNil: [
         celdaSeleccionada borderWidth: 2.
         celdaSeleccionada borderColor: Color black.
+		
+    ].
+
+"Restaurar las celdas adyacentes del turno anterior si existen"
+    celdasAdyacentesAnteriores ifNotNil: [
+        celdasAdyacentesAnteriores do: [:celdaAdyacente |
+            celdaAdyacente borderWidth: 2.
+            celdaAdyacente borderColor: Color black .
+        ].
     ].
 
     "Guardar la referencia de la celda seleccionada"
@@ -217,7 +226,9 @@ Tablero >> marcarCeldasAdyacentes: fila columna: columna [
 
 { #category : 'as yet unclassified' }
 Tablero >> marcarCeldasSeleccionadasYAdyacentes: fila columna: columna [ 
-    | posicionesAdyacentes adyacentes |
+        | posicionesAdyacentes adyacentes |
+
+    
 
     "Marcar la celda seleccionada"
     celdaSeleccionada borderWidth: 4.
@@ -236,13 +247,17 @@ Tablero >> marcarCeldasSeleccionadasYAdyacentes: fila columna: columna [
         (pos x between: 1 and: Matrix size) and: [pos y between: 1 and: (Matrix at: 1) size]
     ].
 
-    "Marcar las celdas adyacentes"
+    "Marcar las celdas adyacentes y almacenar la referencia"
+    celdasAdyacentesAnteriores := OrderedCollection new.
     adyacentes do: [:pos |
         | celdaAdyacente |
         celdaAdyacente := (Matrix at: pos x) at: pos y.
         celdaAdyacente borderWidth: 4.
         celdaAdyacente borderColor: Color white.
-    ]
+        celdasAdyacentesAnteriores add: celdaAdyacente.
+    ].
+
+
 ]
 
 { #category : 'as yet unclassified' }
