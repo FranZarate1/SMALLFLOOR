@@ -10,7 +10,7 @@ Class {
 
 { #category : 'as yet unclassified' }
 Juegos >> BatallaClicks [
- | ventana boton contador1 contador2 jugador1 jugador2 turnoMaximo ganador tiempoLabel tiempoRestante procesoTiempo turnoActual turnoLabel tiempoEsperaLabel tiempoEspera |
+| ventana boton contador1 contador2 jugador1 jugador2 turnoMaximo ganador tiempoLabel tiempoRestante procesoTiempo turnoActual turnoLabel tiempoEsperaLabel tiempoEspera ganadorLabel botonProceso botonDireccionX botonDireccionY random |
 
 "Inicializa contadores y jugadores"
 contador1 := 0.
@@ -19,18 +19,26 @@ jugador1 := 'Jugador 1'.
 jugador2 := 'Jugador 2'.
 turnoMaximo := 2.
 turnoActual := 1.
-tiempoRestante := 10.  "10 segundos para cada turno"
+tiempoRestante := 10. "10 segundos para cada turno"
+tiempoEspera := 3. "3 segundos de pausa entre turnos"
+
+"Inicializa la dirección del movimiento del botón"
+botonDireccionX := 5.
+botonDireccionY := 5.
 
 "Crear la ventana principal"
 ventana := Morph new.
-ventana extent: 500@500;  "Tamaño de la ventana"
-        openInWorld.
+ventana extent: 500@500. "Tamaño de la ventana"
+ventana openInWorld.
 
 "Crear el botón de clics"
 boton := SimpleButtonMorph new.
 boton label: 'Haz clic aquí';
-    position: 160@130;
     extent: 150@150.
+
+"Posicionar el botón dentro de los límites de la ventana"
+boton position: (ventana innerBounds center - (boton extent // 2)).
+ventana addMorph: boton.
 
 "Acción del botón"
 boton on: #mouseDown send: #value to: [
@@ -40,8 +48,6 @@ boton on: #mouseDown send: #value to: [
             ifFalse: [contador2 := contador2 + 1].
     ].
 ].
-
-ventana addMorph: boton.
 
 "Crear la etiqueta para mostrar el tiempo restante"
 tiempoLabel := StringMorph new.
@@ -57,54 +63,92 @@ ventana addMorph: turnoLabel.
 
 "Crear la etiqueta para mostrar el tiempo de espera entre turnos"
 tiempoEsperaLabel := StringMorph new.
-tiempoEsperaLabel contents: 'Esperando el siguiente turno...';
-    position: 140@110.
+tiempoEsperaLabel contents: ''.
+tiempoEsperaLabel position: 140@110.
 ventana addMorph: tiempoEsperaLabel.
+
+"Crear la etiqueta para mostrar el ganador"
+ganadorLabel := StringMorph new.
+ganadorLabel contents: ''.
+ganadorLabel position: 200@170.
+ventana addMorph: ganadorLabel.
+
+"Proceso para mover el botón"
+random := Random new.
+botonProceso := [
+    [ true ] whileTrue: [
+        | nuevaPosicionX nuevaPosicionY ventanaBounds |
+
+        (Delay forMilliseconds: 50) wait. "Esperar un intervalo corto para suavizar el movimiento"
+
+        "Obtener los límites de la ventana"
+        ventanaBounds := ventana innerBounds.
+
+        "Calcular la nueva posición del botón"
+        nuevaPosicionX := boton position x + botonDireccionX.
+        nuevaPosicionY := boton position y + botonDireccionY.
+
+        "Determinar si el botón rebota en los bordes de la ventana"
+        (nuevaPosicionX < ventanaBounds left or: [ nuevaPosicionX + boton width > ventanaBounds right ]) ifTrue: [ botonDireccionX := botonDireccionX negated ].
+        (nuevaPosicionY < ventanaBounds top or: [ nuevaPosicionY + boton height > ventanaBounds bottom ]) ifTrue: [ botonDireccionY := botonDireccionY negated ].
+
+        "Actualizar la posición del botón"
+        boton position: nuevaPosicionX @ nuevaPosicionY.
+    ].
+] fork.
 
 "Proceso para actualizar el tiempo y alternar turnos"
 procesoTiempo := [
     [ turnoActual <= turnoMaximo ] whileTrue: [
-        tiempoRestante := 10.  "Restablece el tiempo a 10 segundos para cada turno"
-       
+        tiempoRestante := 10. "Restablece el tiempo a 10 segundos para cada turno"
+        tiempoEsperaLabel contents: ''.
+        tiempoEsperaLabel changed.
+
         [ tiempoRestante > 0 ] whileTrue: [
             (Delay forSeconds: 1) wait.
             tiempoRestante := tiempoRestante - 1.
             tiempoLabel contents: 'Tiempo restante: ', tiempoRestante printString, ' segundos'.
             tiempoLabel changed. "Forzar actualización de la etiqueta de tiempo"
         ].
-       
+
+        "Quitar el botón durante el tiempo de espera"
+        ventana removeMorph: boton.
+
         "Cambiar turno al finalizar el tiempo"
         turnoActual := turnoActual + 1.
         (turnoActual <= turnoMaximo) ifTrue: [
+            "Pausa entre turnos"
+            tiempoEsperaLabel contents: 'Esperando el siguiente turno...';
+                changed.
+            (Delay forSeconds: tiempoEspera) wait.
+
             turnoLabel contents: 'Turno de: ', (turnoActual = 1 ifTrue: [jugador1] ifFalse: [jugador2]).
-            turnoLabel changed. "Actualizar la etiqueta del turno"
+            turnoLabel changed. "Actualizar etiqueta del turno"
+
+            "Reaparecer el botón al inicio del turno"
+            ventana addMorph: boton.
         ].
-
-        "Esperar entre turnos"
-        tiempoEspera := 10. "Tiempo de espera entre turnos en segundos"
-        tiempoEsperaLabel contents: 'Esperando el siguiente turno durante ', tiempoEspera printString, ' segundos...'.
-        tiempoEsperaLabel changed. "Actualizar la etiqueta de espera"
-       
-        (Delay forSeconds: tiempoEspera) wait.
-       
-        "Borrar el mensaje de espera"
-        tiempoEsperaLabel contents: ''.
-        tiempoEsperaLabel changed. "Actualizar la etiqueta de espera"
     ].
-
+    [
     "Determinar ganador al finalizar los turnos"
     ganador := (contador1 > contador2)
-        ifTrue: [jugador1.
-	ganador_duelo:= 1.]
-        ifFalse: [contador2 > contador1 ifTrue: [jugador2.
-		ganador_duelo:= 2.] ifFalse: ['Empate']].
-	 
-	
-    UIManager default inform: 'Juego terminado.
+        ifTrue: [jugador1]
+        ifFalse: [contador2 > contador1 ifTrue: [jugador2] ifFalse: ['Empate']].
+
+    "Mostrar el resultado en la misma ventana"
+    ganador = 'Empate'
+        ifTrue: [
+            ganadorLabel contents: 'Empate! El juego se reiniciará.'.
+            ganadorLabel changed.
+        ]
+        ifFalse: [
+            ganadorLabel contents: 'Juego terminado.
 ', jugador1, ': ', contador1 printString, ' clics.
 ', jugador2, ': ', contador2 printString, ' clics.
 Ganador: ', ganador.
-] fork.
+            ganadorLabel changed.
+        ].
+]]fork.
 
 "Mostrar la ventana y botón en la pantalla"
 ventana openInWorld.
