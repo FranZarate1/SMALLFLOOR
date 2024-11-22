@@ -360,3 +360,9 @@ Juegos >> SumaTrix [
         ].
     ] fork.
 ]
+
+{ #category : 'as yet unclassified' }
+Juegos >> reinitializeGame [
+"Reiniciar el juego en caso de empate"
+    self NumeroSecreto.
+]

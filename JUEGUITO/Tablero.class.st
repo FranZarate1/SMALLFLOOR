@@ -3,7 +3,8 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'Matrix',
-		'celdaSeleccionada'
+		'celdaSeleccionada',
+		'celdasAdyacentesAnteriores'
 	],
 	#category : 'JUEGUITO',
 	#package : 'JUEGUITO'
