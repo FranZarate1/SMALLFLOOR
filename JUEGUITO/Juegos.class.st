@@ -29,7 +29,7 @@ Juegos >> BatallaClicks [
 
     "Crear la ventana principal"
     ventana := Morph new.
-    ventana extent: 500@500. "Tamaño de la ventana"
+    ventana extent: 700@700. "Tamaño de la ventana"
     ventana openInWorld.
 
     "Crear el botón de clics"
@@ -129,35 +129,37 @@ Juegos >> BatallaClicks [
             ].
         ].
 
-        "Determinar ganador al finalizar los turnos"
-        ganador := (contador1 > contador2)
-            ifTrue: [jugador1.ganador_duelo := 1.]
-            ifFalse: [contador2 > contador1 ifTrue: [jugador2.ganador_duelo := 2.] ifFalse: ['Empate']].
+     "Determinar ganador al finalizar los turnos"
+		ganador := (contador1 > contador2)
+    	ifTrue: [jugador1]
+    	ifFalse: [contador2 > contador1 ifTrue: [jugador2] ifFalse: ['Empate']].
 
-        "Mostrar el resultado en la misma ventana"
-        ganador = 'Empate'
-            ifTrue: [
-                ganadorLabel contents: 'Empate! El juego se reiniciará.'.
-                ganadorLabel changed.
-                tiempoLabel contents: ''.
-                tiempoLabel changed.
-                turnoLabel contents: ''.
-                turnoLabel changed.
-                (Delay forSeconds: 3) wait. "Esperar 3 segundos antes de reiniciar"
+		"Mostrar el resultado en la misma ventana"
+		ganador = 'Empate'
+    		ifTrue: [
+        	ganadorLabel contents: 'Empate! El juego se reiniciará.'.
+        	ganadorLabel changed.
+        	tiempoLabel contents: ''.
+        	tiempoLabel changed.
+        	turnoLabel contents: ''.
+        	turnoLabel changed.
+        	(Delay forSeconds: 3) wait. "Esperar 3 segundos antes de reiniciar"
 
-					 "Cerrar la ventana actual antes de reiniciar el juego"
-        			ventana delete.
-					 
-                "Reiniciar el juego"
-                self BatallaClicks .
-            ]
-            ifFalse: [
-                ganadorLabel contents: 'Juego terminado.
-', jugador1, ': ', contador1 printString, ' clics.
-', jugador2, ': ', contador2 printString, ' clics.
-Ganador: ', ganador.
-                ganadorLabel changed.
-            ].
+        	"Cerrar la ventana actual antes de reiniciar el juego"
+        	ventana delete.
+
+        	"Reiniciar el juego"
+        	self ReiniciarClicks.
+    	]
+    	ifFalse: [
+        	ganadorLabel contents: 'Juego terminado. 
+			', jugador1, ': ', contador1 printString, ' clics. 
+			', jugador2, ': ', contador2 printString, ' clics. 
+			Ganador: ', ganador.
+        	ganadorLabel changed.
+		   (Delay forSeconds: 10) wait. "Esperar 3 segundos antes de reiniciar"
+			 ventana delete.
+    	].
     ] fork.
 
 
