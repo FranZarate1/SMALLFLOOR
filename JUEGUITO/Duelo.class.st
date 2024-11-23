@@ -59,6 +59,8 @@ perdedor := (ganador = jugador1) ifTrue: [jugador2] ifFalse: [jugador1].
     territorioPerdedor := perdedor getTerritorio.
     ganador AgregarTerritorio: territorioPerdedor.
 
+	 ganador actualizarColorTerritorio.
+	
     "Imprimir el resultado en el Transcript"
     Transcript show: 'Ganador: ', ganador getNombre asString, ' ha ganado el territorio de ', perdedor getNombre asString; cr.
 

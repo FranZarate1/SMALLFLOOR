@@ -207,10 +207,13 @@ Tablero >> EncontrarCeldaRandom [
 
 { #category : 'as yet unclassified' }
 Tablero >> manejarClicEnCeldaAdyacente [
+	|duelo |
         "Mostrar la celda adyacente que fue tocada"
 		  Transcript show: 'Celda seleccionada: ', celdaSeleccionada printString, ' (', celdaSeleccionada getX asString, ',', celdaSeleccionada getY asString, ')'; cr.
         Transcript show: 'Celda adyacente tocada: ', celdaAdyacente printString, ' (', celdaAdyacente  getX asString, ',', celdaAdyacente  getY asString, ')'; cr.
-			Transcript show: 'Retaste a:', (celdaAdyacente GetPropietario) printString.
+		
+		duelo:= Duelo new iniciarDueloEntre: (celdaSeleccionada GetPropietario) jugador2: (celdaAdyacente GetPropietario)
+			
 ]
 
 { #category : 'as yet unclassified' }
