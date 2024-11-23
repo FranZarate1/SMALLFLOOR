@@ -13,31 +13,26 @@ Class {
 
 { #category : 'as yet unclassified' }
 Jugador >> AgregarTerritorio: otroTerritorio [ 
-    | combinado |
-    "Asegurarse de que territorio sea una colección válida"
-    territorio ifNil: [territorio := OrderedCollection new]. "Inicializar si es nil"
+        territorio ifNil: [territorio := OrderedCollection new]. "Inicializar si es nil"
+
+        "Verificar si otroTerritorio es una colección"
+        (otroTerritorio isCollection) 
+            ifTrue: [territorio addAll: otroTerritorio]  "Agregar todos los elementos si es una colección"
+            ifFalse: [territorio add: otroTerritorio].  "Agregar el objeto directamente si no es una colección"
+
+        "Imprimir el resultado en el Transcript para depuración"
+        Transcript show: 'Territorio actualizado: ', territorio printString; cr.
     
-    "Convertir territorio a OrderedCollection si no lo es"
-    combinado := territorio asOrderedCollection.
     
-    "Agregar el nuevo territorio"
-    combinado addAll: otroTerritorio. "add en lugar de addAll porque parece ser una única celda"
-    
-    "Volver a asignar como Array si es necesario"
-    territorio := combinado asArray.  
-    
-    "Mensaje para confirmar la operación"
-    Transcript show: 'Territorio actualizado: ', territorio printString; cr.
 ]
 
 { #category : 'as yet unclassified' }
 Jugador >> CrearJugador: unNombre color: unColor [ 
-        self SetNombre: unNombre.
-        self SetColor: unColor.
-        territorio := #().
-        "Aquí puedes agregar el jugador a una colección si necesitas mantener un registro de ellos"
-        Transcript show: 'Jugador creado: ', unNombre asString, ' con color: ', unColor printString; cr.
-        ^ self.
+    self SetNombre: unNombre asInteger.
+    self SetColor: unColor.
+    territorio := OrderedCollection new. "Inicializa territorio como una colección vacía"
+    Transcript show: 'Jugador creado: ', unNombre asString, ' con color: ', unColor printString; cr.
+    ^ self.
     
 
 ]

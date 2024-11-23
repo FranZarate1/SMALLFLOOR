@@ -13,8 +13,8 @@ Class {
 
 { #category : 'as yet unclassified' }
 Tablero >> Crear_Tablero: filap columna: columnap [ 
-        | tablero ventana ventana2 filas columnas celda anchoCelda altoCelda totalAncho totalAlto matrizCeldas xOffset yOffset botonB |
-
+        | tablero ventana ventana2 filas columnas celda anchoCelda altoCelda totalAncho totalAlto matrizCeldas xOffset yOffset botonB numJugador |
+		  numJugador:=1.
         ventana2 := SystemWindow new.
         ventana2 setLabel: 'Tablero 4x4'.
         ventana2 extent: 800 @ 700.  "Tamaño inicial de la ventana."
@@ -46,9 +46,9 @@ Tablero >> Crear_Tablero: filap columna: columnap [
             xOffset := 0.
             1 to: columnas do: [:j | 
                 "Crear la celda con tamaño y posición específicos"
-                celda := Celda new CrearCelda: anchoCelda altoo: altoCelda fila: i columna: j.
+                celda := Celda new CrearCelda: anchoCelda altoo: altoCelda fila: i columna: j juegador: numJugador .
                 celda position: xOffset @ yOffset.  "Colocar la celda en su posición en el tablero"
-                
+                numJugador:=numJugador +1.
                 "Agregar la celda a la matriz"
                 (matrizCeldas at: i) at: j put: celda.
 
