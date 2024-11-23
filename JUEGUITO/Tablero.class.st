@@ -206,6 +206,11 @@ Tablero >> EncontrarCeldaRandom [
 ]
 
 { #category : 'as yet unclassified' }
+Tablero >> ivo [ 
+	^nil
+]
+
+{ #category : 'as yet unclassified' }
 Tablero >> manejarClicEnCeldaAdyacente [
 	|duelo |
         "Mostrar la celda adyacente que fue tocada"
