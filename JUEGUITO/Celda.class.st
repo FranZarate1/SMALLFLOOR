@@ -39,10 +39,7 @@ Celda >> CrearCelda: ancho altoo: alto fila: i columna: j [
 	 "Asignar la celda al territorio del jugador"
     juegador AgregarTerritorio: {self}.
 	 
-	 	
 
-    "Configurar acción para cambiar de color al hacer clic"
-    celdaMorph on: #mouseUp send: #value to: [ celdaMorph color: Color random ].
     
     ^ celdaMorph  "Devolver el Morph creado"
 ]
