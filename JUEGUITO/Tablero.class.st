@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'Matrix',
 		'celdaSeleccionada',
-		'celdasAdyacentesAnteriores'
+		'celdasAdyacentesAnteriores',
+		'celdaAdyacente'
 	],
 	#category : 'JUEGUITO',
 	#package : 'JUEGUITO'
@@ -116,7 +117,7 @@ Tablero >> ElegirCeldaAdyacente [
 
 { #category : 'as yet unclassified' }
 Tablero >> ElegirCeldaAdyacente: X y:Y [
-        | fila columna celdasAdyacentes celdaAdyacente posicionesAdyacentes adyacentes |
+        | fila columna celdasAdyacentes posicionesAdyacentes adyacentes |
 		
 			 "Marcar la celda seleccionada"
    			celdaSeleccionada borderWidth: 4.
@@ -145,11 +146,10 @@ Tablero >> ElegirCeldaAdyacente: X y:Y [
     "Marcar las celdas adyacentes y almacenar la referencia"
         celdasAdyacentesAnteriores := OrderedCollection new.
         adyacentes do: [:pos |
-            | celdaAdyacente |
             celdaAdyacente := (Matrix at: pos x) at: pos y.
             celdaAdyacente borderWidth: 4.
             celdaAdyacente borderColor: Color white.
-            celdaAdyacente on: #mouseUp send: #manejarClicEnCeldaAdyacente: to: self.
+            celdaAdyacente on: #mouseUp send: #manejarClicEnCeldaAdyacente to: self.
             celdasAdyacentesAnteriores add: celdaAdyacente.
         ].
 
@@ -199,7 +199,6 @@ Tablero >> EncontrarCeldaRandom [
                 ].
             ].
         ].
-
         "Llamar al método para elegir una celda adyacente"
        	
 
@@ -207,10 +206,18 @@ Tablero >> EncontrarCeldaRandom [
 ]
 
 { #category : 'as yet unclassified' }
+Tablero >> manejarClicEnCeldaAdyacente [
+        "Mostrar la celda adyacente que fue tocada"
+		  Transcript show: 'Celda seleccionada: ', celdaSeleccionada printString, ' (', celdaSeleccionada getX asString, ',', celdaSeleccionada getY asString, ')'; cr.
+        Transcript show: 'Celda adyacente tocada: ', celdaAdyacente printString, ' (', celdaAdyacente  getX asString, ',', celdaAdyacente  getY asString, ')'; cr.
+			Transcript show: 'Retaste a:', (celdaAdyacente GetPropietario) printString.
+]
+
+{ #category : 'as yet unclassified' }
 Tablero >> manejarClicEnCeldaAdyacente: celdaAdyacente [
         "Mostrar la celda adyacente que fue tocada"
 		  Transcript show: 'Celda seleccionada: ', celdaSeleccionada printString, ' (', celdaSeleccionada getX asString, ',', celdaSeleccionada getY asString, ')'; cr.
-        Transcript show: 'Celda adyacente tocada: ', celdaAdyacente printString, ' (', celdaAdyacente getX asString, ',', celdaAdyacente getY asString, ')'; cr.
+        Transcript show: 'Celda adyacente tocada: ', celdaAdyacente class
 ]
 
 { #category : 'as yet unclassified' }
