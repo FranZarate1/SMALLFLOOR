@@ -188,7 +188,7 @@ ventana openInWorld.
 mensajeLabel := StringMorph new.
 mensajeLabel contents: 'Bienvenidos al juego de adivinanza de números!'.
 mensajeLabel position: 55@100.
-mensajeLabel font: (TextStyle defaultFont familyName: 'Arial' pointSize: 16). "Ajustar el tamaño de la fuente"
+mensajeLabel font: (LogicalFont familyName: 'Arial' pointSize: 16).
 ventana addMorph: mensajeLabel.
 
 "Repetir hasta que ambos jugadores tengan su último intento"
