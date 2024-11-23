@@ -79,3 +79,10 @@ Jugador >> initialize [
     super initialize.
     territorio := OrderedCollection new. "Inicializar como una colección vacía"
 ]
+
+{ #category : 'as yet unclassified' }
+Jugador >> vaciarTerritorio [ 
+    "Vaciar el territorio si no es nil"
+    territorio ifNotNil: [territorio removeAll].
+
+]

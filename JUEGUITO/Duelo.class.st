@@ -58,6 +58,7 @@ perdedor := (ganador = jugador1) ifTrue: [jugador2] ifFalse: [jugador1].
     "Asignar el territorio del perdedor al ganador"
     territorioPerdedor := perdedor getTerritorio.
     ganador AgregarTerritorio: territorioPerdedor.
+	perdedor vaciarTerritorio .
 
 	 ganador actualizarColorTerritorio.
 	
