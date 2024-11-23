@@ -1,6 +1,6 @@
 Class {
 	#name : 'Celda',
-	#superclass : 'Object',
+	#superclass : 'Morph',
 	#instVars : [
 		'COLORCELDA',
 		'x',
@@ -13,35 +13,32 @@ Class {
 
 { #category : 'as yet unclassified' }
 Celda >> CrearCelda: ancho altoo: alto fila: i columna: j [
-    | celdaMorph etiqueta juegador |
-    celdaMorph := Morph new.  "Crear un Morph directamente para representar la celda"
-	 COLORCELDA:= Color random.
-	 celdaMorph color: COLORCELDA.  "Asignar un color aleatorio inicial"
-    celdaMorph extent: ancho @ alto.  "Asignar el tamaño de la celda"
-    celdaMorph borderWidth: 2.  "Asignar el ancho del borde"
-    celdaMorph borderColor: Color black.  "Asignar el color del borde"
+    | etiqueta jugador  |
     
-    "Agregar una etiqueta con el texto 'Jugador' y las coordenadas"
+    "Configuración visual"
+    COLORCELDA := Color random.
+    self color: COLORCELDA.
+    self extent: ancho @ alto.
+    self borderWidth: 2.
+    self borderColor: Color black.
+
+    "Configurar las posiciones X e Y"
+    self setX: i.
+    self setY: j.
+
+    "Agregar una etiqueta con las coordenadas"
     etiqueta := StringMorph new.
     etiqueta contents: 'Jugador ', i asString, '-', j asString.
-    etiqueta center: celdaMorph center.  "Centrar la etiqueta dentro de la celda"
-    celdaMorph addMorph: etiqueta.
-	
-	 
-	 "Guardar las posiciones X e Y de la celda"
-    self setX: i.  "Guardar posición X"
-    self setY: j.  "Guardar posición Y"
-	  "crea jugadores"
-	
-	  juegador:= Jugador new.
-	  juegador CrearJugador: i  color: COLORCELDA . 	
- 	   
-	 "Asignar la celda al territorio del jugador"
-    juegador AgregarTerritorio: {self}.
-	 
+    etiqueta center: self center.
+    self addMorph: etiqueta.
 
-    
-    ^ celdaMorph  "Devolver el Morph creado"
+    "Crear un jugador y asociarlo a la celda"
+    jugador := Jugador new.
+    jugador CrearJugador: i color: COLORCELDA.
+    jugador AgregarTerritorio: self.
+    self setPropietario: jugador.
+
+    ^ self "Devolver la instancia configurada"
 ]
 
 { #category : 'as yet unclassified' }
@@ -57,6 +54,19 @@ Celda >> getX [
 { #category : 'as yet unclassified' }
 Celda >> getY [
 	^y.
+]
+
+{ #category : 'initialization' }
+Celda >> initialize [ 
+super initialize .
+	 x := 0.
+    y := 0.
+    Propietario := nil.
+]
+
+{ #category : 'initialization' }
+Celda >> setPropietario:unPropietario [
+	Propietario:=unPropietario .
 ]
 
 { #category : 'initialization' }

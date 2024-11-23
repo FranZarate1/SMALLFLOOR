@@ -14,10 +14,19 @@ Class {
 { #category : 'as yet unclassified' }
 Jugador >> AgregarTerritorio: otroTerritorio [ 
     | combinado |
+    "Asegurarse de que territorio sea una colección válida"
+    territorio ifNil: [territorio := OrderedCollection new]. "Inicializar si es nil"
+    
+    "Convertir territorio a OrderedCollection si no lo es"
     combinado := territorio asOrderedCollection.
-    combinado addAll: otroTerritorio.
-    territorio := combinado asArray.  "Convertir de nuevo a Array si es necesario"
-	 "Mensaje para confirmar la operación"
+    
+    "Agregar el nuevo territorio"
+    combinado add: otroTerritorio. "add en lugar de addAll porque parece ser una única celda"
+    
+    "Volver a asignar como Array si es necesario"
+    territorio := combinado asArray.  
+    
+    "Mensaje para confirmar la operación"
     Transcript show: 'Territorio actualizado: ', territorio printString; cr.
 ]
 
@@ -58,4 +67,10 @@ Jugador >> actualizarColorTerritorio [ [
         ].
     ].
 ]
+]
+
+{ #category : 'initialization' }
+Jugador >> initialize [
+    super initialize.
+    territorio := OrderedCollection new. "Inicializar como una colección vacía"
 ]
