@@ -21,7 +21,7 @@ Jugador >> AgregarTerritorio: otroTerritorio [
     combinado := territorio asOrderedCollection.
     
     "Agregar el nuevo territorio"
-    combinado add: otroTerritorio. "add en lugar de addAll porque parece ser una única celda"
+    combinado addAll: otroTerritorio. "add en lugar de addAll porque parece ser una única celda"
     
     "Volver a asignar como Array si es necesario"
     territorio := combinado asArray.  
@@ -60,13 +60,23 @@ Jugador >> SetNombre:nombree [
 ]
 
 { #category : 'as yet unclassified' }
-Jugador >> actualizarColorTerritorio [ [
+Jugador >> actualizarColorTerritorio [ 
     territorio do: [ :celda |
         (celda color ~= COLOR) ifTrue: [
             celda color: COLOR.
         ].
     ].
+
 ]
+
+{ #category : 'as yet unclassified' }
+Jugador >> getNombre [
+	^nombre .
+]
+
+{ #category : 'as yet unclassified' }
+Jugador >> getTerritorio [
+	^territorio 
 ]
 
 { #category : 'initialization' }

@@ -11,7 +11,7 @@ Class {
 { #category : 'as yet unclassified' }
 Juegos >> BatallaClicks [ 
 
-| ventana boton contador1 contador2 jugador1 jugador2 turnoMaximo ganador tiempoLabel tiempoRestante procesoTiempo turnoActual turnoLabel tiempoEsperaLabel tiempoEspera ganadorLabel botonProceso botonDireccionX botonDireccionY random|
+| ventana boton contador1 contador2 jugador1 jugador2 turnoMaximo ganador tiempoLabel tiempoRestante procesoTiempo turnoActual turnoLabel tiempoEsperaLabel tiempoEspera ganadorLabel botonProceso botonDireccionX botonDireccionY random |
 
     "Inicializa contadores y jugadores"
     contador1 := 0.
@@ -131,8 +131,8 @@ Juegos >> BatallaClicks [
 
         "Determinar ganador al finalizar los turnos"
         ganador := (contador1 > contador2)
-            ifTrue: [jugador1]
-            ifFalse: [contador2 > contador1 ifTrue: [jugador2] ifFalse: ['Empate']].
+            ifTrue: [jugador1.ganador_duelo := 1.]
+            ifFalse: [contador2 > contador1 ifTrue: [jugador2.ganador_duelo := 2.] ifFalse: ['Empate']].
 
         "Mostrar el resultado en la misma ventana"
         ganador = 'Empate'
@@ -163,6 +163,11 @@ Ganador: ', ganador.
 
 
 
+]
+
+{ #category : 'as yet unclassified' }
+Juegos >> GetGanador [
+	^ganador_duelo 
 ]
 
 { #category : 'as yet unclassified' }
@@ -262,11 +267,13 @@ guessedNumber1 = secretNumber1
     ifTrue: [
         mensajeLabel contents: '¡Jugador 1 gana! El jugador 2 no logró acertar.'.
         mensajeLabel changed.
+		  ganador_duelo:= 1 
     ].
 guessedNumber2 = secretNumber2
     ifTrue: [
         mensajeLabel contents: '¡Jugador 2 gana! El jugador 1 no logró acertar.'.
         mensajeLabel changed.
+		  ganador_duelo:=2
     ].
 ]
 
@@ -342,8 +349,8 @@ Juegos >> SumaTrix [
 
         "Comparar las respuestas y determinar el resultado"
         resultado := (diferencia1 < diferencia2)
-            ifTrue: ['Jugador 1 gana con una diferencia de ', diferencia1 printString]
-            ifFalse: [diferencia2 < diferencia1 ifTrue: ['Jugador 2 gana con una diferencia de ', diferencia2 printString] ifFalse: ['Empate']].
+            ifTrue: ['Jugador 1 gana con una diferencia de ', diferencia1 printString.ganador_duelo:= 1]
+            ifFalse: [diferencia2 < diferencia1 ifTrue: ['Jugador 2 gana con una diferencia de ', diferencia2 printString.ganador_duelo:= 2] ifFalse: ['Empate']].
 
         "Mostrar el resultado en el Morph de resultado"
         resultadoMorph contents: 'Suma correcta: ', suma printString, ' - ', resultado asString.
