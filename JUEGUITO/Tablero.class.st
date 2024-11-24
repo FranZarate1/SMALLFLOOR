@@ -9,235 +9,235 @@ Class {
 		'adyacenteArriba',
 		'adyacenteAbajo',
 		'adyacenteDerecha',
-		'adyacenteIzquierda'
+		'adyacenteIzquierda',
+		'botones'
 	],
 	#category : 'JUEGUITO',
 	#package : 'JUEGUITO'
 }
 
 { #category : 'as yet unclassified' }
-Tablero >> Crear_Tablero: filap columna: columnap [ 
-        | tablero ventana ventana2 filas columnas celda anchoCelda altoCelda totalAncho totalAlto matrizCeldas xOffset yOffset botonB numJugador |
-		  numJugador:=1.
-        ventana2 := SystemWindow new.
-        ventana2 setLabel: 'Tablero 4x4'.
-        ventana2 extent: 800 @ 700.  "Tamaño inicial de la ventana."
+Tablero >> Crear_Tablero: arg1 columna: arg2 [
 
-        ventana := SystemWindow new.
-        ventana extent: 800 @ 600.  "Tamaño inicial de la ventana."
-
-        filas := filap.  "Número de filas"
-        columnas := columnap.  "Número de columnas"
-
-        "Calcular el tamaño de las celdas según el tamaño de la ventana"
-        totalAncho := ventana extent x.  "Ancho total de la ventana"
-        totalAlto := ventana extent y.  "Alto total de la ventana"
-        anchoCelda := totalAncho // columnas.  "Ancho de cada celda"
-        altoCelda := totalAlto // filas.  "Alto de cada celda"
-
-        "Crear el tablero"
-        tablero := Morph new.
-        tablero layoutPolicy: nil.  "Sin layout automático; las celdas se posicionan manualmente."
-        tablero hResizing: #spaceFill; vResizing: #spaceFill.  "Permitir que se ajuste al espacio disponible."
-
-        "Crear la matriz para almacenar las celdas"
-        matrizCeldas := Array new: filas.  "Crea un arreglo para las filas"
-        1 to: filas do: [:i | matrizCeldas at: i put: (Array new: columnas)].
-        
-        "Crear y posicionar las celdas directamente en el tablero"
-        yOffset := 0.
-        1 to: filas do: [:i | 
-            xOffset := 0.
-            1 to: columnas do: [:j | 
-                "Crear la celda con tamaño y posición específicos"
-                celda := Celda new CrearCelda: anchoCelda altoo: altoCelda fila: i columna: j juegador: numJugador .
-                celda position: xOffset @ yOffset.  "Colocar la celda en su posición en el tablero"
-                numJugador:=numJugador +1.
-                "Agregar la celda a la matriz"
-                (matrizCeldas at: i) at: j put: celda.
-
-                "Agregar la celda al tablero"
-                tablero addMorph: celda.
-
-                "Actualizar el offset horizontal"
-                xOffset := xOffset + anchoCelda.
-            ].
-            "Actualizar el offset vertical"
-            yOffset := yOffset + altoCelda.
-        ].
-
-        "Almacenar la matriz como un atributo de la clase para acceso posterior"
-        Matrix := matrizCeldas.
-
-        "Agregar el tablero dentro de la ventana"
-        ventana addMorph: tablero.
-
-        "Agregar otra ventana para poner un botón e iniciar la búsqueda del jugador"
-        botonB := SimpleButtonMorph new.
-        botonB label: 'Encontrar Celda Random'; 
-            target: self; 
-            actionSelector: #EncontrarCeldaRandom;
-            position: 350 @ 630.  "Primer N° posición horizontal y el segundo la vertical"
-        ventana2 addMorph: botonB.
-        ventana2 addMorph: ventana.
-
-        ventana2 openInWorld.
+	| tmp1 tmp2 tmp3 tmp4 tmp5 tmp6 tmp7 tmp8 tmp9 tmp10 tmp11 tmp12 tmp13 tmp14 tmp15 tmp16 tmp17 tmp18 tmp20 |
+	tmp15 := 1.
+	tmp3 := SystemWindow new.
+	tmp3
+		setLabel: 'Tablero 4x4';
+		extent: 800 @ 700.
+	tmp2 := SystemWindow new.
+	tmp2 extent: 800 @ 600.
+	tmp4 := arg1.
+	tmp5 := arg2.
+	tmp9 := tmp2 extent x.
+	tmp10 := tmp2 extent y.
+	tmp7 := tmp9 // tmp5.
+	tmp8 := tmp10 // tmp4.
+	tmp1 := Morph new.
+	tmp1
+		layoutPolicy: nil;
+		hResizing: #spaceFill;
+		vResizing: #spaceFill.
+	tmp11 := Array new: tmp4.
+	tmp16 := tmp4.
+	tmp18 := tmp16.
+	1 to: tmp18 do: [ :tmp19 | tmp11 at: tmp19 put: (Array new: tmp5) ].
+	1.
+	tmp13 := 0.
+	tmp16 := tmp4.
+	tmp18 := tmp16.
+	1 to: tmp18 do: [ :tmp19 |
+		tmp12 := 0.
+		tmp17 := tmp5.
+		tmp20 := tmp17.
+		1 to: tmp20 do: [ :tmp21 |
+			tmp6 := Celda new
+				        CrearCelda: tmp7
+				        altoo: tmp8
+				        fila: tmp19
+				        columna: tmp21
+				        juegador: tmp15.
+			tmp6 position: tmp12 @ tmp13.
+			tmp15 := tmp15 + 1.
+			(tmp11 at: tmp19) at: tmp21 put: tmp6.
+			tmp1 addMorph: tmp6.
+			tmp12 := tmp12 + tmp7 ].
+		1.
+		tmp13 := tmp13 + tmp8 ].
+	1.
+	Matrix := tmp11.
+	tmp2 addMorph: tmp1.
+	tmp14 := SimpleButtonMorph new.
+	tmp14
+		label: 'Encontrar Celda Random';
+		target: self;
+		actionSelector: #EncontrarCeldaRandom;
+		position: 350 @ 630.
+	tmp3
+		addMorph: tmp14;
+		addMorph: tmp2;
+		openInWorld
 ]
 
 { #category : 'as yet unclassified' }
 Tablero >> ElegirCeldaAdyacente [
-        | fila columna celdasAdyacentes celdaAdyacente |
 
-        "Obtener la posición de la celda seleccionada"
-        fila := celdaSeleccionada getX.
-        columna := celdaSeleccionada getY.
-
-        "Inicializar la colección de celdas adyacentes"
-        celdasAdyacentes := OrderedCollection new.
-
-        "Agregar celdas adyacentes (arriba, abajo, izquierda, derecha) si están dentro de los límites"
-        (fila > 1) ifTrue: [ celdasAdyacentes add: (Matrix at: fila - 1) at: columna ].  "Arriba"
-        (fila < Matrix size) ifTrue: [ celdasAdyacentes add: (Matrix at: fila + 1) at: columna ].  "Abajo"
-        (columna > 1) ifTrue: [ celdasAdyacentes add: (Matrix at: fila) at: columna - 1 ].  "Izquierda"
-        (columna < (Matrix at: fila) size) ifTrue: [ celdasAdyacentes add: (Matrix at: fila) at: columna + 1 ].  "Derecha"
-
-        "Pintar las celdas adyacentes"
-        celdasAdyacentes do: [:celda | celda color: Color green].
-
-        "Seleccionar una celda adyacente aleatoria"
-        celdaAdyacente := celdasAdyacentes atRandom.
-
-        "Marcar la nueva celda seleccionada"
-        celdaSeleccionada borderWidth: 2.
-        celdaSeleccionada borderColor: Color black.
-        celdaAdyacente borderWidth: 4.
-        celdaAdyacente borderColor: Color red.
-
-        "Guardar la referencia de la nueva celda seleccionada"
-        celdaSeleccionada := celdaAdyacente.
-
-        ^ celdaAdyacente
+	| tmp1 tmp2 tmp3 tmp4 |
+	tmp1 := celdaSeleccionada getX.
+	tmp2 := celdaSeleccionada getY.
+	tmp3 := OrderedCollection new.
+	tmp1 > 1 ifTrue: [ tmp3 add: (Matrix at: tmp1 - 1) at: tmp2 ].
+	tmp1 < Matrix size ifTrue: [
+		tmp3 add: (Matrix at: tmp1 + 1) at: tmp2 ].
+	tmp2 > 1 ifTrue: [ tmp3 add: (Matrix at: tmp1) at: tmp2 - 1 ].
+	tmp2 < (Matrix at: tmp1) size ifTrue: [
+		tmp3 add: (Matrix at: tmp1) at: tmp2 + 1 ].
+	tmp3 do: [ :arg1 | arg1 color: Color green ].
+	tmp4 := tmp3 atRandom.
+	celdaSeleccionada
+		borderWidth: 2;
+		borderColor: Color black.
+	tmp4
+		borderWidth: 4;
+		borderColor: Color red.
+	celdaSeleccionada := tmp4.
+	^ tmp4
 ]
 
 { #category : 'as yet unclassified' }
-Tablero >> ElegirCeldaAdyacente: X y:Y [
-        | fila columna celdasAdyacentes posicionesAdyacentes adyacentes  cont|
+Tablero >> ElegirCeldaAdyacente: X y: Y [ 
+    | fila columna celdasAdyacentes posicionesAdyacentes adyacentes cont botonTemporal  |
 
-             "Marcar la celda seleccionada"
-               celdaSeleccionada borderWidth: 4.
-            celdaSeleccionada borderColor: Color red.
-        cont:=1.
-        "Obtener la posición de la celda seleccionada"
-        fila := X.
-        columna := Y.
+    "Marcar la celda seleccionada"
+    celdaSeleccionada borderWidth: 4.
+    celdaSeleccionada borderColor: Color red.
 
-        "Inicializar la colección de celdas adyacentes"
-        celdasAdyacentes := OrderedCollection new.
+    cont := 1.
+    "Obtener la posición de la celda seleccionada"
+    fila := X.
+    columna := Y.
 
-"Predefinir todas las posiciones posibles de las celdas adyacentes (arriba, abajo, izquierda, derecha)"
-celdasAdyacentes := {
-    (fila - 1) @ columna.  "Arriba"
-    (fila + 1) @ columna.  "Abajo"
-    fila @ (columna - 1).  "Izquierda"
-    fila @ (columna + 1).  "Derecha"
-}.
+    "Inicializar la colección de celdas adyacentes"
+    celdasAdyacentes := OrderedCollection new.
+    botones := OrderedCollection new.  "Colección para almacenar los botones"
 
-"Inicializar referencias y colección de celdas adyacentes anteriores"
-adyacenteArriba := nil.
-adyacenteAbajo := nil.
-adyacenteIzquierda := nil.
-adyacenteDerecha := nil.
-celdasAdyacentesAnteriores := OrderedCollection new.
+    "Predefinir todas las posiciones posibles de las celdas adyacentes (arriba, abajo, izquierda, derecha)"
+    celdasAdyacentes := {
+        (fila - 1) @ columna.  "Arriba"
+        (fila + 1) @ columna.  "Abajo"
+        fila @ (columna - 1).  "Izquierda"
+        fila @ (columna + 1).  "Derecha"
+    }.
 
-"Inicializar el contador para asociar direcciones"
+    "Inicializar referencias y colección de celdas adyacentes anteriores"
+    adyacenteArriba := nil.
+    adyacenteAbajo := nil.
+    adyacenteIzquierda := nil.
+    adyacenteDerecha := nil.
+    celdasAdyacentesAnteriores := OrderedCollection new.
 
-"Iterar sobre las posiciones posibles, manteniendo la lógica de direcciones"
-celdasAdyacentes do: [:pos |
-    | celdaAdyacente |
-    "Verificar si la posición está dentro de los límites del tablero"
-    ((pos x between: 1 and: Matrix size) and: [pos y between: 1 and: (Matrix at: 1) size]) ifTrue: [
-        celdaAdyacente := (Matrix at: pos x) at: pos y.
-        celdaAdyacente borderWidth: 4.
-        celdaAdyacente borderColor: Color white.
+    "Inicializar el contador para asociar direcciones"
+    celdasAdyacentes do: [:pos |
+        | celdaAdyacente |
+        "Verificar si la posición está dentro de los límites del tablero"
+        ((pos x between: 1 and: Matrix size) and: [pos y between: 1 and: (Matrix at: 1) size]) ifTrue: [
+            celdaAdyacente := (Matrix at: pos x) at: pos y.
+            celdaAdyacente borderWidth: 4.
+            celdaAdyacente borderColor: Color white.
 
-        "Asociar cada celda con su dirección específica según el contador"
-        cont caseOf: {
-            [1] -> [
-                celdaAdyacente on: #mouseUp send: #manejarClicEnCeldaAdyacenteArriba to: self.
-                adyacenteArriba := celdaAdyacente.
-            ].
-            [2] -> [
-                celdaAdyacente on: #mouseUp send: #manejarClicEnCeldaAdyacenteAbajo to: self.
-                adyacenteAbajo := celdaAdyacente.
-            ].
-            [3] -> [
-                celdaAdyacente on: #mouseUp send: #manejarClicEnCeldaAdyacenteIzquierda to: self.
-                adyacenteIzquierda := celdaAdyacente.
-            ].
-            [4] -> [
-                celdaAdyacente on: #mouseUp send: #manejarClicEnCeldaAdyacenteDerecha to: self.
-                adyacenteDerecha := celdaAdyacente.
-            ].
-        }.
+            "Asociar cada celda con su dirección específica según el contador"
+            cont caseOf: {
+                [1] -> [
+                    adyacenteArriba := celdaAdyacente.
+                    botonTemporal := SimpleButtonMorph new.
+                    botonTemporal label: 'Seleccionar'.
+                    botonTemporal target: self.
+                    botonTemporal actionSelector: #manejarClicEnCeldaAdyacenteArriba.
 
-        "Agregar la celda válida a la colección de referencias anteriores"
-        celdasAdyacentesAnteriores add: celdaAdyacente.
+                    botonTemporal extent: celdaAdyacente extent // 2.
+                    botonTemporal position: celdaAdyacente position + (celdaAdyacente extent // 4).
+                    celdaAdyacente addMorph: botonTemporal.
+                    botones add: botonTemporal. "Añadir el botón a la colección"
+                ].
+                [2] -> [
+                    adyacenteAbajo := celdaAdyacente.
+                    botonTemporal := SimpleButtonMorph new.
+                    botonTemporal label: 'Seleccionar'.
+                    botonTemporal target: self.
+                    botonTemporal actionSelector: #manejarClicEnCeldaAdyacenteAbajo.
+
+                    botonTemporal extent: celdaAdyacente extent // 2.
+                    botonTemporal position: celdaAdyacente position + (celdaAdyacente extent // 4).
+                    celdaAdyacente addMorph: botonTemporal.
+                    botones add: botonTemporal. "Añadir el botón a la colección"
+                ].
+                [3] -> [
+                    adyacenteIzquierda := celdaAdyacente.
+                    botonTemporal := SimpleButtonMorph new.
+                    botonTemporal label: 'Seleccionar'.
+                    botonTemporal target: self.
+                    botonTemporal actionSelector: #manejarClicEnCeldaAdyacenteIzquierda.
+
+                    botonTemporal extent: celdaAdyacente extent // 2.
+                    botonTemporal position: celdaAdyacente position + (celdaAdyacente extent // 4).
+                    celdaAdyacente addMorph: botonTemporal.
+                    botones add: botonTemporal. "Añadir el botón a la colección"
+                ].
+                [4] -> [
+                    adyacenteDerecha := celdaAdyacente.
+                    botonTemporal := SimpleButtonMorph new.
+                    botonTemporal label: 'Seleccionar'.
+                    botonTemporal target: self.
+                    botonTemporal actionSelector: #manejarClicEnCeldaAdyacenteDerecha.
+
+                    botonTemporal extent: celdaAdyacente extent // 2.
+                    botonTemporal position: celdaAdyacente position + (celdaAdyacente extent // 4).
+                    celdaAdyacente addMorph: botonTemporal.
+                    botones add: botonTemporal. "Añadir el botón a la colección"
+                ].
+            }.
+
+            "Agregar la celda válida a la colección de referencias anteriores"
+            "celdasAdyacentesAnteriores add: celdaAdyacente."
+        ].
+
+        "Avanzar al siguiente contador para la próxima dirección"
+        cont := cont + 1.
     ].
 
-    "Avanzar al siguiente contador para la próxima dirección"
-    cont := cont + 1.
-].
+    "Después de hacer clic en cualquier botón, eliminar todos los botones"
+    
+
 
 		
 
 ]
 
 { #category : 'as yet unclassified' }
-Tablero >> EncontrarCeldaRandom [ 
-        | filaAleatoria columnaAleatoria celdaAleatoria totalCeldas contador X Y|
+Tablero >> EncontrarCeldaRandom [
 
-        "Generar índices aleatorios para fila y columna"
-        filaAleatoria := (1 to: Matrix size) atRandom.
-        columnaAleatoria := (1 to: (Matrix at: filaAleatoria) size) atRandom.
-
-        "Obtener la celda aleatoria"
-        celdaAleatoria := (Matrix at: filaAleatoria) at: columnaAleatoria.
-
-        "Restaurar la celda previamente seleccionada si existe"
-        celdaSeleccionada ifNotNil: [
-            celdaSeleccionada borderWidth: 2.
-            celdaSeleccionada borderColor: Color black.
-        ].
-
-        "Restaurar las celdas adyacentes del turno anterior si existen"
-        celdasAdyacentesAnteriores ifNotNil: [
-            celdasAdyacentesAnteriores do: [:celdaAdyacente |
-                celdaAdyacente borderWidth: 2.
-                celdaAdyacente borderColor: Color black.
-            ].
-        ].
-
-        "Guardar la referencia de la celda seleccionada"
-        celdaSeleccionada := celdaAleatoria.
-
-        "Hacer que todas las celdas titilen y luego marcar las celdas seleccionadas y adyacentes"
-        totalCeldas := Matrix size * (Matrix at: 1) size.
-        contador := 0.
-
-        Matrix do: [:fila |
-            fila do: [:celda |
-                self titilarCelda: celda after: [
-                    contador := contador + 1.
-                    (contador = totalCeldas) ifTrue: [
-                        self ElegirCeldaAdyacente:filaAleatoria  y:columnaAleatoria.
-                    ].
-                ].
-            ].
-        ].
-        "Llamar al método para elegir una celda adyacente"
-       	
-
-        ^ celdaAleatoria
+	| tmp1 tmp2 tmp3 tmp4 tmp5 tmp6 tmp8 |
+	tmp1 := (1 to: Matrix size) atRandom.
+	tmp2 := (1 to: (Matrix at: tmp1) size) atRandom.
+	tmp3 := (Matrix at: tmp1) at: tmp2.
+	celdaSeleccionada ifNotNil: [
+		celdaSeleccionada
+			borderWidth: 2;
+			borderColor: Color black ].
+	celdasAdyacentesAnteriores ifNotNil: [
+		celdasAdyacentesAnteriores do: [ :arg1 |
+			arg1
+				borderWidth: 2;
+				borderColor: Color black ] ].
+	celdaSeleccionada := tmp3.
+	tmp4 := Matrix size * (Matrix at: 1) size.
+	tmp8 := 0.
+	Matrix do: [ :arg2 |
+		arg2 do: [ :arg3 |
+			self titilarCelda: arg3 after: [
+				tmp8 := tmp8 + 1.
+				tmp8 = tmp4 ifTrue: [ self ElegirCeldaAdyacente: tmp1 y: tmp2 ] ] ] ].
+	^ tmp3
 ]
 
 { #category : 'as yet unclassified' }
@@ -247,13 +247,21 @@ Tablero >> ivo [
 
 { #category : 'as yet unclassified' }
 Tablero >> manejarClicEnCeldaAdyacente [
-	|duelo |
-        "Mostrar la celda adyacente que fue tocada"
-		  Transcript show: 'Celda seleccionada: ', celdaSeleccionada printString, ' (', celdaSeleccionada getX asString, ',', celdaSeleccionada getY asString, ')'; cr.
-        Transcript show: 'Celda adyacente tocada: ', celdaAdyacente printString, ' (', celdaAdyacente  getX asString, ',', celdaAdyacente  getY asString, ')'; cr.
-		
-		duelo:= Duelo new iniciarDueloEntre: (celdaSeleccionada GetPropietario) jugador2: (celdaAdyacente GetPropietario)
-			
+
+	| tmp1 |
+	Transcript
+		show: 'Celda seleccionada: ' , celdaSeleccionada printString , ' ('
+			, celdaSeleccionada getX asString , ','
+			, celdaSeleccionada getY asString , ')';
+		cr;
+		show:
+			'Celda adyacente tocada: ' , celdaAdyacente printString , ' ('
+			, celdaAdyacente getX asString , ',' , celdaAdyacente getY asString
+			, ')';
+		cr.
+	tmp1 := Duelo new
+		        iniciarDueloEntre: celdaSeleccionada GetPropietario
+		        jugador2: celdaAdyacente GetPropietario
 ]
 
 { #category : 'as yet unclassified' }
@@ -272,6 +280,10 @@ Tablero >> manejarClicEnCeldaAdyacenteAbajo [
         Transcript show: 'Celda adyacente tocada: ', adyacenteAbajo printString, ' (', ( adyacenteAbajo )  getX asString, ',', adyacenteAbajo getY asString, ')'; cr.
 
         duelo:= Duelo new iniciarDueloEntre: (celdaSeleccionada GetPropietario) jugador2: (adyacenteAbajo GetPropietario) .
+			
+botones do: [:boton |
+        boton delete.
+    ].
 
 ]
 
@@ -284,6 +296,9 @@ Tablero >> manejarClicEnCeldaAdyacenteArriba [
 
         duelo:= Duelo new iniciarDueloEntre: (celdaSeleccionada GetPropietario) jugador2: (adyacenteArriba GetPropietario).
 
+botones do: [:boton |
+        boton delete.
+    ].
 
 ]
 
@@ -295,6 +310,10 @@ Tablero >> manejarClicEnCeldaAdyacenteDerecha [
         Transcript show: 'Celda adyacente tocada: ', adyacenteDerecha printString, ' (', adyacenteDerecha  getX asString, ',', adyacenteDerecha  getY asString, ')'; cr.
 
      duelo:= Duelo new iniciarDueloEntre: (celdaSeleccionada GetPropietario) jugador2: (adyacenteDerecha GetPropietario).
+botones do: [:boton |
+        boton delete.
+    ].
+
 ]
 
 { #category : 'as yet unclassified' }
@@ -306,55 +325,49 @@ Tablero >> manejarClicEnCeldaAdyacenteIzquierda [
         Transcript show: 'Celda adyacente tocada: ', adyacenteIzquierda printString, ' (', adyacenteIzquierda   getX asString, ',', adyacenteIzquierda  getY asString, ')'; cr.
 
         duelo:= Duelo new iniciarDueloEntre: (celdaSeleccionada GetPropietario) jugador2: (adyacenteIzquierda GetPropietario).
-]
-
-{ #category : 'as yet unclassified' }
-Tablero >> marcarCeldasSeleccionadasYAdyacentes: fila columna: columna [ 
-        | posicionesAdyacentes adyacentes |
-
-    
-
-    "Marcar la celda seleccionada"
-    celdaSeleccionada borderWidth: 4.
-    celdaSeleccionada borderColor: Color red.
-
-    "Definir las posiciones adyacentes (arriba, abajo, izquierda, derecha)"
-    posicionesAdyacentes := {
-        (fila - 1) @ columna.  "Arriba"
-        (fila + 1) @ columna.  "Abajo"
-        fila @ (columna - 1).  "Izquierda"
-        fila @ (columna + 1).  "Derecha"
-    }.
-
-    "Filtrar las posiciones que están dentro de los límites del tablero"
-    adyacentes := posicionesAdyacentes select: [:pos |
-        (pos x between: 1 and: Matrix size) and: [pos y between: 1 and: (Matrix at: 1) size]
+botones do: [:boton |
+        boton delete.
     ].
-
-    "Marcar las celdas adyacentes y almacenar la referencia"
-    celdasAdyacentesAnteriores := OrderedCollection new.
-    adyacentes do: [:pos |
-        | celdaAdyacente |
-        celdaAdyacente := (Matrix at: pos x) at: pos y.
-        celdaAdyacente borderWidth: 4.
-        celdaAdyacente borderColor: Color white.
-        celdasAdyacentesAnteriores add: celdaAdyacente.
-    ].
-
 
 ]
 
 { #category : 'as yet unclassified' }
-Tablero >> titilarCelda: celda after: aBlock [ 
-        | originalColor |
-    originalColor := celda color.
-    [ 10 timesRepeat: [
-        celda color: Color yellow.
-        (Delay forMilliseconds: 200) wait.
-        celda color: Color blue.
-        (Delay forMilliseconds: 200) wait.
-    ].
-    celda color: originalColor.  "Restaurar el color original al final"
-    aBlock value.  "Ejecutar el bloque después de que termine de titilar"
-    ] fork.
+Tablero >> marcarCeldasSeleccionadasYAdyacentes: arg1 columna: arg2 [
+
+	| tmp1 tmp2 |
+	celdaSeleccionada
+		borderWidth: 4;
+		borderColor: Color red.
+	tmp1 := {
+		        (arg1 - 1 @ arg2).
+		        (arg1 + 1 @ arg2).
+		        (arg1 @ (arg2 - 1)).
+		        (arg1 @ (arg2 + 1)) }.
+	tmp2 := tmp1 select: [ :arg3 |
+		        (arg3 x between: 1 and: Matrix size) and: [
+			        arg3 y between: 1 and: (Matrix at: 1) size ] ].
+	celdasAdyacentesAnteriores := OrderedCollection new.
+	tmp2 do: [ :arg4 |
+		| tmp3 |
+		tmp3 := (Matrix at: arg4 x) at: arg4 y.
+		tmp3
+			borderWidth: 4;
+			borderColor: Color white.
+		celdasAdyacentesAnteriores add: tmp3 ]
+]
+
+{ #category : 'as yet unclassified' }
+Tablero >> titilarCelda: arg1 after: arg2 [
+
+	| tmp1 |
+	tmp1 := arg1 color.
+	[
+	1 to: 10 do: [ :tmp2 |
+		arg1 color: Color yellow.
+		(Delay forMilliseconds: 200) wait.
+		arg1 color: Color blue.
+		(Delay forMilliseconds: 200) wait ].
+	1.
+	arg1 color: tmp1.
+	arg2 value ] fork
 ]
