@@ -95,6 +95,12 @@ super initialize .
 ]
 
 { #category : 'initialization' }
+Celda >> setColor:unColor [
+	COLORCELDA :=unColor .
+	
+]
+
+{ #category : 'initialization' }
 Celda >> setPropietario:unPropietario [
 	Propietario:=unPropietario .
 ]

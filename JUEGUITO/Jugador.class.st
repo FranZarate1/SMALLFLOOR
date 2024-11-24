@@ -62,13 +62,15 @@ Jugador >> activarDuelo [
 ]
 
 { #category : 'as yet unclassified' }
-Jugador >> actualizarColorTerritorio [ 
-    territorio do: [ :celda |
-        (celda color ~= COLOR) ifTrue: [
-            celda color: COLOR.
+Jugador >> actualizarColorTerritorio [
+    "Actualizar el color de todas las celdas en el territorio del jugador"
+    territorio ifNil: [^self]. "Evitar errores si el territorio está vacío"
+
+    territorio do: [:celda |
+        (celda color ~= self GetColor ) ifTrue: [
+            celda color: self GetColor.
         ].
     ].
-
 ]
 
 { #category : 'as yet unclassified' }

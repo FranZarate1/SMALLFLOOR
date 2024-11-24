@@ -49,12 +49,12 @@ Duelo >> iniciarDueloEntre: jugador1 jugador2:jugador2 [
         jugador2 activarDuelo.
 		 
         "Seleccionar aleatoriamente un juego"
-        juego := #(BatallaClicks NumeroSecreto SumaTrix) atRandom.
+        juego := #(BatallaClicks NumeroSecreto ) atRandom.
 
         "Iniciar el juego seleccionado y determinar el ganador"
         juego = #BatallaClicks ifTrue: [ jueguito := Juegos new BatallaClicks ].
         juego = #NumeroSecreto ifTrue: [ jueguito := Juegos new NumeroSecreto ].
-        juego = #SumaTrix ifTrue: [ jueguito := Juegos new SumaTrix ].
+        "juego = #SumaTrix ifTrue: [ jueguito := Juegos new SumaTrix ]."
         ganador := jueguito GetGanador.
 
         "Determinar perdedor basado en el ganador"
@@ -77,7 +77,7 @@ Duelo >> iniciarDueloEntre: jugador1 jugador2:jugador2 [
         jugador2 desactivarDuelo.
 
         "Imprimir el resultado"
-        Transcript show: 'Ganador: ', ganador getNombre, ' ha ganado el territorio de ', perdedor getNombre; cr.
+        Transcript show: 'Ganador: ', (ganador getNombre)asString, ' ha ganado el territorio de ', (perdedor getNombre)asString; cr.
 
         ^ganador.
 

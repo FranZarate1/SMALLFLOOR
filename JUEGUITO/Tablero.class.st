@@ -134,36 +134,60 @@ Tablero >> ElegirCeldaAdyacente: X y:Y [
         "Inicializar la colección de celdas adyacentes"
         celdasAdyacentes := OrderedCollection new.
 
-        "Agregar celdas adyacentes (arriba, abajo, izquierda, derecha) si están dentro de los límites"
-        celdasAdyacentes := {
-        (fila - 1) @ columna.  "Arriba"
-        (fila + 1) @ columna.  "Abajo"
-        fila @ (columna - 1).  "Izquierda"
-        fila @ (columna + 1).  "Derecha"
-    }.
+"Predefinir todas las posiciones posibles de las celdas adyacentes (arriba, abajo, izquierda, derecha)"
+celdasAdyacentes := {
+    (fila - 1) @ columna.  "Arriba"
+    (fila + 1) @ columna.  "Abajo"
+    fila @ (columna - 1).  "Izquierda"
+    fila @ (columna + 1).  "Derecha"
+}.
 
-        "Filtrar las posiciones que están dentro de los límites del tablero"
-       "Filtrar las posiciones que están dentro de los límites del tablero"
-    adyacentes := celdasAdyacentes select: [:pos |
-        (pos x between: 1 and: Matrix size) and: [pos y between: 1 and: (Matrix at: 1) size]
+"Inicializar referencias y colección de celdas adyacentes anteriores"
+adyacenteArriba := nil.
+adyacenteAbajo := nil.
+adyacenteIzquierda := nil.
+adyacenteDerecha := nil.
+celdasAdyacentesAnteriores := OrderedCollection new.
+
+"Inicializar el contador para asociar direcciones"
+
+"Iterar sobre las posiciones posibles, manteniendo la lógica de direcciones"
+celdasAdyacentes do: [:pos |
+    | celdaAdyacente |
+    "Verificar si la posición está dentro de los límites del tablero"
+    ((pos x between: 1 and: Matrix size) and: [pos y between: 1 and: (Matrix at: 1) size]) ifTrue: [
+        celdaAdyacente := (Matrix at: pos x) at: pos y.
+        celdaAdyacente borderWidth: 4.
+        celdaAdyacente borderColor: Color white.
+
+        "Asociar cada celda con su dirección específica según el contador"
+        cont caseOf: {
+            [1] -> [
+                celdaAdyacente on: #mouseUp send: #manejarClicEnCeldaAdyacenteArriba to: self.
+                adyacenteArriba := celdaAdyacente.
+            ].
+            [2] -> [
+                celdaAdyacente on: #mouseUp send: #manejarClicEnCeldaAdyacenteAbajo to: self.
+                adyacenteAbajo := celdaAdyacente.
+            ].
+            [3] -> [
+                celdaAdyacente on: #mouseUp send: #manejarClicEnCeldaAdyacenteIzquierda to: self.
+                adyacenteIzquierda := celdaAdyacente.
+            ].
+            [4] -> [
+                celdaAdyacente on: #mouseUp send: #manejarClicEnCeldaAdyacenteDerecha to: self.
+                adyacenteDerecha := celdaAdyacente.
+            ].
+        }.
+
+        "Agregar la celda válida a la colección de referencias anteriores"
+        celdasAdyacentesAnteriores add: celdaAdyacente.
     ].
-"Marcar las celdas adyacentes y almacenar la referencia"
-        celdasAdyacentesAnteriores := OrderedCollection new.
-       adyacentes do: [:pos |
-            celdaAdyacente := (Matrix at: pos x) at: pos y.
-            celdaAdyacente borderWidth: 4.
-            celdaAdyacente borderColor: Color white.
-        cont =1 ifTrue: [celdaAdyacente on: #mouseUp send: #manejarClicEnCeldaAdyacenteArriba to: self. Transcript show: 'si entra';cr.
-            adyacenteArriba:=(Matrix at: pos x) at: pos y.].
-      cont =2 ifTrue: [celdaAdyacente on: #mouseUp send: #manejarClicEnCeldaAdyacenteAbajo to: self.
-    adyacenteAbajo:= (Matrix at: pos x) at: pos y. ].
-        cont =3 ifTrue: [celdaAdyacente on: #mouseUp send: #manejarClicEnCeldaAdyacenteIzquierda to: self. 
-            adyacenteIzquierda :=(Matrix at: pos x) at: pos y. ].
-        cont =4 ifTrue: [celdaAdyacente on: #mouseUp send: #manejarClicEnCeldaAdyacenteDerecha to: self.
-            adyacenteDerecha:= (Matrix at: pos x) at: pos y.  ].
-            celdasAdyacentesAnteriores add: celdaAdyacente.
-        cont:=cont+1.
-        ].
+
+    "Avanzar al siguiente contador para la próxima dirección"
+    cont := cont + 1.
+].
+
 		
 
 ]
@@ -245,7 +269,7 @@ Tablero >> manejarClicEnCeldaAdyacenteAbajo [
         "Mostrar la celda adyacente que fue tocada"
           Transcript show: 'Celda seleccionada: ', celdaSeleccionada printString, ' (', celdaSeleccionada getX asString, ',', celdaSeleccionada getY asString, ')'; cr.
 
-        Transcript show: 'Celda adyacente tocada: ', adyacenteAbajo printString, ' (', ( celdaAdyacente )  getX asString, ',', adyacenteAbajo getY asString, ')'; cr.
+        Transcript show: 'Celda adyacente tocada: ', adyacenteAbajo printString, ' (', ( adyacenteAbajo )  getX asString, ',', adyacenteAbajo getY asString, ')'; cr.
 
         duelo:= Duelo new iniciarDueloEntre: (celdaSeleccionada GetPropietario) jugador2: (adyacenteAbajo GetPropietario) .
 
