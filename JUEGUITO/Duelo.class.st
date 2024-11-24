@@ -47,7 +47,7 @@ Duelo >> iniciarDueloEntre: jugador1 jugador2:jugador2 [
         "Activar la bandera de duelo para ambos jugadores"
         jugador1 activarDuelo.
         jugador2 activarDuelo.
-
+		 
         "Seleccionar aleatoriamente un juego"
         juego := #(BatallaClicks NumeroSecreto SumaTrix) atRandom.
 

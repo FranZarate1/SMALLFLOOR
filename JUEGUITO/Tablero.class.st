@@ -5,7 +5,11 @@ Class {
 		'Matrix',
 		'celdaSeleccionada',
 		'celdasAdyacentesAnteriores',
-		'celdaAdyacente'
+		'celdaAdyacente',
+		'adyacenteArriba',
+		'adyacenteAbajo',
+		'adyacenteDerecha',
+		'adyacenteIzquierda'
 	],
 	#category : 'JUEGUITO',
 	#package : 'JUEGUITO'
@@ -117,12 +121,12 @@ Tablero >> ElegirCeldaAdyacente [
 
 { #category : 'as yet unclassified' }
 Tablero >> ElegirCeldaAdyacente: X y:Y [
-        | fila columna celdasAdyacentes posicionesAdyacentes adyacentes |
-		
-			 "Marcar la celda seleccionada"
-   			celdaSeleccionada borderWidth: 4.
-    		celdaSeleccionada borderColor: Color red.
-		
+        | fila columna celdasAdyacentes posicionesAdyacentes adyacentes  cont|
+
+             "Marcar la celda seleccionada"
+               celdaSeleccionada borderWidth: 4.
+            celdaSeleccionada borderColor: Color red.
+        cont:=1.
         "Obtener la posición de la celda seleccionada"
         fila := X.
         columna := Y.
@@ -139,20 +143,27 @@ Tablero >> ElegirCeldaAdyacente: X y:Y [
     }.
 
         "Filtrar las posiciones que están dentro de los límites del tablero"
+       "Filtrar las posiciones que están dentro de los límites del tablero"
     adyacentes := celdasAdyacentes select: [:pos |
         (pos x between: 1 and: Matrix size) and: [pos y between: 1 and: (Matrix at: 1) size]
     ].
-
-    "Marcar las celdas adyacentes y almacenar la referencia"
+"Marcar las celdas adyacentes y almacenar la referencia"
         celdasAdyacentesAnteriores := OrderedCollection new.
-        adyacentes do: [:pos |
+       adyacentes do: [:pos |
             celdaAdyacente := (Matrix at: pos x) at: pos y.
             celdaAdyacente borderWidth: 4.
             celdaAdyacente borderColor: Color white.
-            celdaAdyacente on: #mouseUp send: #manejarClicEnCeldaAdyacente to: self.
+        cont =1 ifTrue: [celdaAdyacente on: #mouseUp send: #manejarClicEnCeldaAdyacenteArriba to: self. Transcript show: 'si entra';cr.
+            adyacenteArriba:=(Matrix at: pos x) at: pos y.].
+      cont =2 ifTrue: [celdaAdyacente on: #mouseUp send: #manejarClicEnCeldaAdyacenteAbajo to: self.
+    adyacenteAbajo:= (Matrix at: pos x) at: pos y. ].
+        cont =3 ifTrue: [celdaAdyacente on: #mouseUp send: #manejarClicEnCeldaAdyacenteIzquierda to: self. 
+            adyacenteIzquierda :=(Matrix at: pos x) at: pos y. ].
+        cont =4 ifTrue: [celdaAdyacente on: #mouseUp send: #manejarClicEnCeldaAdyacenteDerecha to: self.
+            adyacenteDerecha:= (Matrix at: pos x) at: pos y.  ].
             celdasAdyacentesAnteriores add: celdaAdyacente.
+        cont:=cont+1.
         ].
-
 		
 
 ]
@@ -226,6 +237,51 @@ Tablero >> manejarClicEnCeldaAdyacente: celdaAdyacente [
         "Mostrar la celda adyacente que fue tocada"
 		  Transcript show: 'Celda seleccionada: ', celdaSeleccionada printString, ' (', celdaSeleccionada getX asString, ',', celdaSeleccionada getY asString, ')'; cr.
         Transcript show: 'Celda adyacente tocada: ', celdaAdyacente class
+]
+
+{ #category : 'as yet unclassified' }
+Tablero >> manejarClicEnCeldaAdyacenteAbajo [
+    |duelo |
+        "Mostrar la celda adyacente que fue tocada"
+          Transcript show: 'Celda seleccionada: ', celdaSeleccionada printString, ' (', celdaSeleccionada getX asString, ',', celdaSeleccionada getY asString, ')'; cr.
+
+        Transcript show: 'Celda adyacente tocada: ', adyacenteAbajo printString, ' (', ( celdaAdyacente )  getX asString, ',', adyacenteAbajo getY asString, ')'; cr.
+
+        duelo:= Duelo new iniciarDueloEntre: (celdaSeleccionada GetPropietario) jugador2: (adyacenteAbajo GetPropietario) .
+
+]
+
+{ #category : 'as yet unclassified' }
+Tablero >> manejarClicEnCeldaAdyacenteArriba [
+    |duelo |
+        "Mostrar la celda adyacente que fue tocada"
+          Transcript show: 'Celda seleccionada: ', celdaSeleccionada printString, ' (', celdaSeleccionada getX asString, ',', celdaSeleccionada getY asString, ')'; cr.
+        Transcript show: 'Celda adyacente tocada: ', adyacenteArriba printString, ' (', adyacenteArriba getX asString, ',', adyacenteArriba  getY asString, ')'; cr.
+
+        duelo:= Duelo new iniciarDueloEntre: (celdaSeleccionada GetPropietario) jugador2: (adyacenteArriba GetPropietario).
+
+
+]
+
+{ #category : 'as yet unclassified' }
+Tablero >> manejarClicEnCeldaAdyacenteDerecha [
+    |duelo |
+        "Mostrar la celda adyacente que fue tocada"
+          Transcript show: 'Celda seleccionada: ', celdaSeleccionada printString, ' (', celdaSeleccionada getX asString, ',', celdaSeleccionada getY asString, ')'; cr.
+        Transcript show: 'Celda adyacente tocada: ', adyacenteDerecha printString, ' (', adyacenteDerecha  getX asString, ',', adyacenteDerecha  getY asString, ')'; cr.
+
+     duelo:= Duelo new iniciarDueloEntre: (celdaSeleccionada GetPropietario) jugador2: (adyacenteDerecha GetPropietario).
+]
+
+{ #category : 'as yet unclassified' }
+Tablero >> manejarClicEnCeldaAdyacenteIzquierda [
+    |duelo |
+        "Mostrar la celda adyacente que fue tocada"
+
+          Transcript show: 'Celda seleccionada: ', celdaSeleccionada printString, ' (', celdaSeleccionada getX asString, ',', celdaSeleccionada getY asString, ')'; cr.
+        Transcript show: 'Celda adyacente tocada: ', adyacenteIzquierda printString, ' (', adyacenteIzquierda   getX asString, ',', adyacenteIzquierda  getY asString, ')'; cr.
+
+        duelo:= Duelo new iniciarDueloEntre: (celdaSeleccionada GetPropietario) jugador2: (adyacenteIzquierda GetPropietario).
 ]
 
 { #category : 'as yet unclassified' }

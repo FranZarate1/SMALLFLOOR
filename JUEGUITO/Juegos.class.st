@@ -131,8 +131,8 @@ Juegos >> BatallaClicks [
 
      "Determinar ganador al finalizar los turnos"
 		ganador := (contador1 > contador2)
-    	ifTrue: [jugador1]
-    	ifFalse: [contador2 > contador1 ifTrue: [jugador2] ifFalse: ['Empate']].
+    	ifTrue: [ganador_duelo:=1]
+    	ifFalse: [contador2 > contador1 ifTrue: [ganador_duelo :=2] ifFalse: ['Empate']].
 
 		"Mostrar el resultado en la misma ventana"
 		ganador = 'Empate'
@@ -155,7 +155,7 @@ Juegos >> BatallaClicks [
         	ganadorLabel contents: 'Juego terminado. 
 			', jugador1, ': ', contador1 printString, ' clics. 
 			', jugador2, ': ', contador2 printString, ' clics. 
-			Ganador: ', ganador.
+			Ganador:jugador ', ganador printString.
         	ganadorLabel changed.
 		   (Delay forSeconds: 10) wait. "Esperar 3 segundos antes de reiniciar"
 			 ventana delete.
@@ -351,8 +351,8 @@ Juegos >> SumaTrix [
 
         "Comparar las respuestas y determinar el resultado"
         resultado := (diferencia1 < diferencia2)
-            ifTrue: ['Jugador 1 gana con una diferencia de ', diferencia1 printString.ganador_duelo:= 1]
-            ifFalse: [diferencia2 < diferencia1 ifTrue: ['Jugador 2 gana con una diferencia de ', diferencia2 printString.ganador_duelo:= 2] ifFalse: ['Empate']].
+            ifTrue: [('Jugador 1 gana con una diferencia de ', diferencia1 printString). ganador_duelo:= 1]
+            ifFalse: [diferencia2 < diferencia1 ifTrue: [('Jugador 2 gana con una diferencia de ', diferencia2 printString). ganador_duelo:= 2] ifFalse: ['Empate']].
 
         "Mostrar el resultado en el Morph de resultado"
         resultadoMorph contents: 'Suma correcta: ', suma printString, ' - ', resultado asString.
