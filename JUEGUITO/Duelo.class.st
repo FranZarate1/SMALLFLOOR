@@ -6,7 +6,8 @@ Class {
 		'jugador1',
 		'jugador2',
 		'ganador',
-		'perdedor'
+		'perdedor',
+		'DuelosActivos'
 	],
 	#category : 'JUEGUITO',
 	#package : 'JUEGUITO'
@@ -35,38 +36,50 @@ Duelo >> iniciar [
 
 { #category : 'as yet unclassified' }
 Duelo >> iniciarDueloEntre: jugador1 jugador2:jugador2 [ 
-    | juego ganador perdedor territorioPerdedor jueguito |
+   | jugador1 jugador2 ganador perdedor  juego jueguito territorioPerdedor|
 
-    "Asignar jugadores"
-    self setJugador1: jugador1.
-    self setJugador2: jugador2.
+    "Verificar que ninguno de los jugadores esté en un duelo"
+        (jugador1 estaEnDuelo or: [jugador2 estaEnDuelo]) ifTrue: [
+            Transcript show: 'Uno o ambos jugadores ya están en un duelo. Intenta más tarde.'; cr.
+            ^self.
+        ].
 
-    "Seleccionar aleatoriamente un juego"
-    juego := #(BatallaClicks NumeroSecreto SumaTrix) atRandom.
+        "Activar la bandera de duelo para ambos jugadores"
+        jugador1 activarDuelo.
+        jugador2 activarDuelo.
 
-    "Iniciar el juego seleccionado y determinar el ganador"
-    juego = #BatallaClicks ifTrue: [ jueguito:= Juegos new BatallaClicks].
-    juego = #NumeroSecreto ifTrue: [ jueguito:= Juegos new NumeroSecreto].
-    juego = #SumaTrix ifTrue: [jueguito := Juegos new SumaTrix].
-	ganador:= jueguito GetGanador.
-    "Simular la lógica de determinar perdedor (debería venir del juego)"
-ganador = 1 ifTrue:[ganador:=jugador1]  ifFalse:[ganador:=jugador2].    
+        "Seleccionar aleatoriamente un juego"
+        juego := #(BatallaClicks NumeroSecreto SumaTrix) atRandom.
 
-perdedor := (ganador = jugador1) ifTrue: [jugador2] ifFalse: [jugador1].
-	 self setPerdedor: perdedor.
-	self setGanador:ganador.
-    "Asignar el territorio del perdedor al ganador"
-    territorioPerdedor := perdedor getTerritorio.
-    ganador AgregarTerritorio: territorioPerdedor.
-	perdedor vaciarTerritorio .
+        "Iniciar el juego seleccionado y determinar el ganador"
+        juego = #BatallaClicks ifTrue: [ jueguito := Juegos new BatallaClicks ].
+        juego = #NumeroSecreto ifTrue: [ jueguito := Juegos new NumeroSecreto ].
+        juego = #SumaTrix ifTrue: [ jueguito := Juegos new SumaTrix ].
+        ganador := jueguito GetGanador.
 
-	 ganador actualizarColorTerritorio.
-	
-    "Imprimir el resultado en el Transcript"
-    Transcript show: 'Ganador: ', ganador getNombre asString, ' ha ganado el territorio de ', perdedor getNombre asString; cr.
+        "Determinar perdedor basado en el ganador"
+        ganador := (ganador = 1) ifTrue: [jugador1] ifFalse: [jugador2].
+        perdedor := (ganador = jugador1) ifTrue: [jugador2] ifFalse: [jugador1].
 
-    "Devolver el ganador"
-    ^ ganador.
+        self setPerdedor: perdedor.
+        self setGanador: ganador.
+
+        "Transferir territorio del perdedor al ganador"
+        territorioPerdedor := perdedor getTerritorio.
+        ganador AgregarTerritorio: territorioPerdedor.
+        perdedor vaciarTerritorio.
+
+        "Actualizar colores del territorio"
+        ganador actualizarColorTerritorio.
+
+        "Desactivar la bandera de duelo para ambos jugadores"
+        jugador1 desactivarDuelo.
+        jugador2 desactivarDuelo.
+
+        "Imprimir el resultado"
+        Transcript show: 'Ganador: ', ganador getNombre, ' ha ganado el territorio de ', perdedor getNombre; cr.
+
+        ^ganador.
 
 
 ]

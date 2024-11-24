@@ -5,7 +5,8 @@ Class {
 		'nombre',
 		'COLOR',
 		'territorio',
-		'cant_celdas'
+		'cant_celdas',
+		'flagDuelo'
 	],
 	#category : 'JUEGUITO',
 	#package : 'JUEGUITO'
@@ -55,6 +56,12 @@ Jugador >> SetNombre:nombree [
 ]
 
 { #category : 'as yet unclassified' }
+Jugador >> activarDuelo [ 
+        flagDuelo := true.
+    
+]
+
+{ #category : 'as yet unclassified' }
 Jugador >> actualizarColorTerritorio [ 
     territorio do: [ :celda |
         (celda color ~= COLOR) ifTrue: [
@@ -62,6 +69,18 @@ Jugador >> actualizarColorTerritorio [
         ].
     ].
 
+]
+
+{ #category : 'as yet unclassified' }
+Jugador >> desactivarDuelo [ 
+        flagDuelo := false.
+    
+]
+
+{ #category : 'as yet unclassified' }
+Jugador >> estaEnDuelo [ 
+      ^flagDuelo == true
+    
 ]
 
 { #category : 'as yet unclassified' }
@@ -78,6 +97,8 @@ Jugador >> getTerritorio [
 Jugador >> initialize [
     super initialize.
     territorio := OrderedCollection new. "Inicializar como una colección vacía"
+ "Inicializamos la bandera en falso"
+    flagDuelo := false.
 ]
 
 { #category : 'as yet unclassified' }
