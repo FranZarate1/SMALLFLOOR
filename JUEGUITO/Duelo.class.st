@@ -49,10 +49,10 @@ Duelo >> iniciarDueloEntre: jugador1 jugador2:jugador2 [
         jugador2 activarDuelo.
 		 
         "Seleccionar aleatoriamente un juego"
-        juego := #(BatallaClicks NumeroSecreto ) atRandom.
+        juego := #("BatallaClicks" NumeroSecreto ) atRandom.
 
         "Iniciar el juego seleccionado y determinar el ganador"
-        juego = #BatallaClicks ifTrue: [ jueguito := Juegos new BatallaClicks ].
+        "juego = #BatallaClicks ifTrue: [ jueguito := Juegos new BatallaClicks ]."
         juego = #NumeroSecreto ifTrue: [ jueguito := Juegos new NumeroSecreto ].
         "juego = #SumaTrix ifTrue: [ jueguito := Juegos new SumaTrix ]."
         ganador := jueguito GetGanador.

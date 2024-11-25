@@ -235,7 +235,7 @@ Tablero >> EncontrarCeldaRandom [
             ].
         ].
         "Llamar al método para elegir una celda adyacente"
-       	
+       	"jiji"
 
         ^ celdaAleatoria
 ]
