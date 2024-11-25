@@ -14,41 +14,45 @@ Class {
 
 { #category : 'as yet unclassified' }
 SMALLFLOOR >> Iniciar [
+| boton1 boton2 boton3 boton4 |
 
-	| tmp1 tmp2 tmp3 tmp4 |
-	ventana := Morph new.
-	ventana
-		extent: 400 @ 300;
-		openInWorld.
-	flag_config := false.
-	tmp1 := SimpleButtonMorph new.
-	tmp1
-		label: 'Iniciar Juego';
-		target: self;
-		actionSelector: #accionBoton1;
-		position: 160 @ 150.
-	ventana addMorph: tmp1.
-	tmp2 := SimpleButtonMorph new.
-	tmp2
-		label: 'Configuraciones';
-		target: self;
-		actionSelector: #accionBoton2;
-		position: 150 @ 200.
-	ventana addMorph: tmp2.
-	tmp3 := SimpleButtonMorph new.
-	tmp3
-		label: 'Instrucciones';
-		target: self;
-		actionSelector: #accionBoton3;
-		position: 160 @ 250.
-	ventana addMorph: tmp3.
-	tmp4 := SimpleButtonMorph new.
-	tmp4
-		label: 'X';
-		target: self;
-		actionSelector: #accionBoton4;
-		position: 385 @ 19.
-	ventana addMorph: tmp4
+    ventana := Morph new.
+    ventana extent: 400@300;  "Tamaño de la ventana"
+        openInWorld.
+
+    "Poner caratula en esta parte"
+      "Poner caratula en esta parte"
+
+
+    "Crear y configurar el primer botón"
+       flag_config := false.
+     boton1 := SimpleButtonMorph new.
+    boton1 label: 'Iniciar Juego'; 
+        target: self; 
+        actionSelector: #accionBoton1; 
+        position: 160@150.  "Primer N° posición horizontal y el segundo la vertical"
+    ventana addMorph: boton1.
+    "Crear y configurar el tercer botón"
+    boton2 := SimpleButtonMorph new.
+    boton2 label: 'Configuraciones'; 
+        target: self; 
+        actionSelector: #accionBoton2; 
+        position: 150@200.
+    ventana addMorph: boton2.
+  "Crear y configurar el segundo botón"
+    boton3 := SimpleButtonMorph new.
+    boton3 label: 'Instrucciones'; 
+        target: self; 
+        actionSelector: #accionBoton3; 
+        position: 160@250.
+    ventana addMorph: boton3.
+    "Crear y configurar el segundo botón"
+    boton4 := SimpleButtonMorph new.
+    boton4 label: 'X'; 
+        target: self; 
+          actionSelector: #accionBoton4;
+          position: 385@19.
+    ventana addMorph: boton4.
 ]
 
 { #category : 'as yet unclassified' }
