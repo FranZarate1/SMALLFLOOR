@@ -173,8 +173,8 @@ Juegos >> GetGanador [
 Juegos >> NumeroSecreto [
 
 	| ventana mensajeLabel secretNumber1 secretNumber2 guessedNumber1 guessedNumber2 attempts1 attempts2 playerTurn gameEnded |
-	Transcript show: secretNumber1;cr.
-	Transcript show: secretNumber2.
+	secretNumber1 := (1 to: 100) atRandom.
+    secretNumber2 := (1 to: 100) atRandom.
 	guessedNumber1 := 0.
 	guessedNumber2 := 0.
 	attempts1 := 0.

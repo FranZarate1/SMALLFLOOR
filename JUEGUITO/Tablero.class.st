@@ -81,104 +81,106 @@ Tablero >> Crear_Tablero: arg1 columna: arg2 [
 ]
 
 { #category : 'as yet unclassified' }
-Tablero >> ElegirCeldaAdyacente: X y: Y [
+Tablero >> ElegirCeldaAdyacente: X y: Y [ 
+    | fila columna celdasAdyacentes posicionesAdyacentes adyacentes cont botonTemporal  |
 
-	| fila columna celdasAdyacentes posicionesAdyacentes adyacentes cont botonTemporal buscarAdyacentes resultado |
-	"Marcar la celda seleccionada"
-	celdaSeleccionada borderWidth: 4.
-	celdaSeleccionada borderColor: Color red.
+    "Marcar la celda seleccionada"
+    celdaSeleccionada borderWidth: 4.
+    celdaSeleccionada borderColor: Color red.
 
-	cont := 1.
-	"Obtener la posición de la celda seleccionada"
-	fila := X.
-	columna := Y.
+    cont := 1.
+    "Obtener la posición de la celda seleccionada"
+    fila := X.
+    columna := Y.
 
-	"Inicializar la colección de celdas adyacentes"
-	celdasAdyacentes := OrderedCollection new.
-	botones := OrderedCollection new. "Colección para almacenar los botones"
+    "Inicializar la colección de celdas adyacentes"
+    celdasAdyacentes := OrderedCollection new.
+    botones := OrderedCollection new.  "Colección para almacenar los botones"
 
-	"Obtener las posiciones iniciales adyacentes"
-	celdasAdyacentes := {
-		                    (fila - 1 @ columna). "Arriba"
-		                    (fila + 1 @ columna). "Abajo"
-		                    (fila @ (columna - 1)). "Izquierda"
-		                    (fila @ (columna + 1)) "Derecha" }.
+    "Predefinir todas las posiciones posibles de las celdas adyacentes (arriba, abajo, izquierda, derecha)"
+    celdasAdyacentes := {
+        (fila - 1) @ columna.  "Arriba"
+        (fila + 1) @ columna.  "Abajo"
+        fila @ (columna - 1).  "Izquierda"
+        fila @ (columna + 1).  "Derecha"
+    }.
 
-	"Inicializar referencias y colección de celdas adyacentes anteriores"
-	adyacenteArriba := nil.
-	adyacenteAbajo := nil.
-	adyacenteIzquierda := nil.
-	adyacenteDerecha := nil.
-	celdasAdyacentesAnteriores := OrderedCollection new.
+    "Inicializar referencias y colección de celdas adyacentes anteriores"
+    adyacenteArriba := nil.
+    adyacenteAbajo := nil.
+    adyacenteIzquierda := nil.
+    adyacenteDerecha := nil.
+    celdasAdyacentesAnteriores := OrderedCollection new.
 
-	"Inicializar el contador para asociar direcciones"
-	celdasAdyacentes do: [ :pos |
-		| celdaAdyacente |
-		"Verificar si la posición está dentro de los límites del tablero"
-		((pos x between: 1 and: Matrix size) and: [
-			 pos y between: 1 and: (Matrix at: 1) size ]) ifTrue: [
-			celdaAdyacente := (Matrix at: pos x) at: pos y.
-			celdaAdyacente borderWidth: 4.
-			
+    "Inicializar el contador para asociar direcciones"
+    celdasAdyacentes do: [:pos |
+        | celdaAdyacente |
+        "Verificar si la posición está dentro de los límites del tablero"
+        ((pos x between: 1 and: Matrix size) and: [pos y between: 1 and: (Matrix at: 1) size]) ifTrue: [
+            celdaAdyacente := (Matrix at: pos x) at: pos y.
+            celdaAdyacente borderWidth: 4.
+            celdaAdyacente borderColor: Color white.
+					celdaSeleccionada GetPropietario = celdaAdyacente GetPropietario ifFalse: [  
+            "Asociar cada celda con su dirección específica según el contador"
+            cont caseOf: {
+                [1] -> [
+                    adyacenteArriba := celdaAdyacente.
+                    botonTemporal := SimpleButtonMorph new.
+                    botonTemporal label: 'Seleccionar'.
+                    botonTemporal target: self.
+                    botonTemporal actionSelector: #manejarClicEnCeldaAdyacenteArriba.
 
-			"Asociar cada celda con su dirección específica según el contador"
-			cont caseOf: {
-					([ 1 ] -> [
-					 adyacenteArriba := celdaAdyacente.
-					 botonTemporal := SimpleButtonMorph new.
-					 botonTemporal label: 'Seleccionar'.
-					 botonTemporal target: self.
-					 botonTemporal actionSelector: #manejarClicEnCeldaAdyacenteArriba.
+                    botonTemporal extent: celdaAdyacente extent // 2.
+                    botonTemporal position: celdaAdyacente position + (celdaAdyacente extent // 4).
+                    celdaAdyacente addMorph: botonTemporal.
+                    botones add: botonTemporal. "Añadir el botón a la colección"
+                ].
+                [2] -> [
+                    adyacenteAbajo := celdaAdyacente.
+                    botonTemporal := SimpleButtonMorph new.
+                    botonTemporal label: 'Seleccionar'.
+                    botonTemporal target: self.
+                    botonTemporal actionSelector: #manejarClicEnCeldaAdyacenteAbajo.
 
-					 botonTemporal extent: celdaAdyacente extent // 2.
-					 botonTemporal position:
-						 celdaAdyacente position + (celdaAdyacente extent // 4).
-					 celdaAdyacente addMorph: botonTemporal.
-					 botones add: botonTemporal "Añadir el botón a la colección" ]).
-					([ 2 ] -> [
-					 adyacenteAbajo := celdaAdyacente.
-					 botonTemporal := SimpleButtonMorph new.
-					 botonTemporal label: 'Seleccionar'.
-					 botonTemporal target: self.
-					 botonTemporal actionSelector: #manejarClicEnCeldaAdyacenteAbajo.
+                    botonTemporal extent: celdaAdyacente extent // 2.
+                    botonTemporal position: celdaAdyacente position + (celdaAdyacente extent // 4).
+                    celdaAdyacente addMorph: botonTemporal.
+                    botones add: botonTemporal. "Añadir el botón a la colección"
+                ].
+                [3] -> [
+                    adyacenteIzquierda := celdaAdyacente.
+                    botonTemporal := SimpleButtonMorph new.
+                    botonTemporal label: 'Seleccionar'.
+                    botonTemporal target: self.
+                    botonTemporal actionSelector: #manejarClicEnCeldaAdyacenteIzquierda.
 
-					 botonTemporal extent: celdaAdyacente extent // 2.
-					 botonTemporal position:
-						 celdaAdyacente position + (celdaAdyacente extent // 4).
-					 celdaAdyacente addMorph: botonTemporal.
-					 botones add: botonTemporal "Añadir el botón a la colección" ]).
-					([ 3 ] -> [
-					 adyacenteIzquierda := celdaAdyacente.
-					 botonTemporal := SimpleButtonMorph new.
-					 botonTemporal label: 'Seleccionar'.
-					 botonTemporal target: self.
-					 botonTemporal actionSelector:
-						 #manejarClicEnCeldaAdyacenteIzquierda.
+                    botonTemporal extent: celdaAdyacente extent // 2.
+                    botonTemporal position: celdaAdyacente position + (celdaAdyacente extent // 4).
+                    celdaAdyacente addMorph: botonTemporal.
+                    botones add: botonTemporal. "Añadir el botón a la colección"
+                ].
+                [4] -> [
+                    adyacenteDerecha := celdaAdyacente.
+                    botonTemporal := SimpleButtonMorph new.
+                    botonTemporal label: 'Seleccionar'.
+                    botonTemporal target: self.
+                    botonTemporal actionSelector: #manejarClicEnCeldaAdyacenteDerecha.
 
-					 botonTemporal extent: celdaAdyacente extent // 2.
-					 botonTemporal position:
-						 celdaAdyacente position + (celdaAdyacente extent // 4).
-					 celdaAdyacente addMorph: botonTemporal.
-					 botones add: botonTemporal "Añadir el botón a la colección" ]).
-					([ 4 ] -> [
-					 adyacenteDerecha := celdaAdyacente.
-					 botonTemporal := SimpleButtonMorph new.
-					 botonTemporal label: 'Seleccionar'.
-					 botonTemporal target: self.
-					 botonTemporal actionSelector:
-						 #manejarClicEnCeldaAdyacenteDerecha.
+                    botonTemporal extent: celdaAdyacente extent // 2.
+                    botonTemporal position: celdaAdyacente position + (celdaAdyacente extent // 4).
+                    celdaAdyacente addMorph: botonTemporal.
+                    botones add: botonTemporal. "Añadir el botón a la colección"
+                ].
+            }.
+			]
+            "Agregar la celda válida a la colección de referencias anteriores"
+            "celdasAdyacentesAnteriores add: celdaAdyacente."
+        ].
 
-					 botonTemporal extent: celdaAdyacente extent // 2.
-					 botonTemporal position:
-						 celdaAdyacente position + (celdaAdyacente extent // 4).
-					 celdaAdyacente addMorph: botonTemporal.
-					 botones add: botonTemporal "Añadir el botón a la colección" ]) }
+        "Avanzar al siguiente contador para la próxima dirección"
+        cont := cont + 1.
+    ].
 
-			"Agregar la celda válida a la colección de referencias anteriores"
-			"celdasAdyacentesAnteriores add: celdaAdyacente." ].
-
-		"Avanzar al siguiente contador para la próxima dirección"
-		cont := cont + 1 ]
 ]
 
 { #category : 'as yet unclassified' }
