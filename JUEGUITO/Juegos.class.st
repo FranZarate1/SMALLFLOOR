@@ -173,8 +173,8 @@ Juegos >> GetGanador [
 Juegos >> NumeroSecreto [
 
 	| ventana mensajeLabel secretNumber1 secretNumber2 guessedNumber1 guessedNumber2 attempts1 attempts2 playerTurn gameEnded |
-	secretNumber1 := (1 to: 100) atRandom.
-	secretNumber2 := (1 to: 100) atRandom.
+	Transcript show: secretNumber1;cr.
+	Transcript show: secretNumber2.
 	guessedNumber1 := 0.
 	guessedNumber2 := 0.
 	attempts1 := 0.
@@ -240,25 +240,26 @@ Juegos >> NumeroSecreto [
 		 guessedNumber2 = secretNumber2 ]) ifTrue: [
 		mensajeLabel contents:
 			'¡Empate! Ambos jugadores acertaron en el mismo intento. Comenzará un desempate.'.
-		mensajeLabel changed.
-		secretNumber1 := (1 to: 100) atRandom.
-		secretNumber2 := (1 to: 100) atRandom.
-		guessedNumber1 := 0.
-		guessedNumber2 := 0.
-		attempts1 := 0.
-		attempts2 := 0.
-		playerTurn := 1.
-		gameEnded := false ].
+				(Delay forSeconds: 3) wait.
+				ventana delete.
+			self reinitializeGame ]
+		ifFalse:[ 
 	guessedNumber1 = secretNumber1 ifTrue: [
 		mensajeLabel contents:
 			'¡Jugador 1 gana! El jugador 2 no logró acertar.'.
 		mensajeLabel changed.
-		ganador_duelo := 1 ].
+		ganador_duelo := 1.
+			(Delay forSeconds: 3) wait.
+				ventana delete.
+				 ].
 	guessedNumber2 = secretNumber2 ifFalse: [ ^ self ].
 	mensajeLabel contents:
 		'¡Jugador 2 gana! El jugador 1 no logró acertar.'.
 	mensajeLabel changed.
-	ganador_duelo := 2
+	ganador_duelo := 2.
+	(Delay forSeconds: 3) wait.
+				ventana delete.
+	].
 ]
 
 { #category : 'as yet unclassified' }

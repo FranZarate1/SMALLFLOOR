@@ -12,37 +12,7 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-Celda >> CrearCelda: ancho altoo: alto fila: i columna: j [
-    | etiqueta jugador  |
-
-    "Configuración visual"
-    COLORCELDA := Color random.
-    self color: COLORCELDA.
-    self extent: ancho @ alto.
-    self borderWidth: 2.
-    self borderColor: Color black.
-
-    "Configurar las posiciones X e Y"
-    self setX: i.
-    self setY: j.
-
-    "Agregar una etiqueta con las coordenadas"
-    etiqueta := StringMorph new.
-    etiqueta contents: 'Jugador ', i asString, '-', j asString.
-    etiqueta center: self center.
-    self addMorph: etiqueta.
-
-    "Crear un jugador y asociarlo a la celda"
-    jugador := Jugador new.
-    jugador CrearJugador: i color: COLORCELDA.
-    jugador AgregarTerritorio: self.
-    self setPropietario: jugador.
-
-    ^ self "Devolver la instancia configurada"
-]
-
-{ #category : 'as yet unclassified' }
-Celda >> CrearCelda: ancho altoo: alto fila: i columna: j juegador: num [ 
+Celda >> CrearCelda: ancho altoo: alto fila: i columna: j juegador: num total:total [
     | etiqueta jugador  |
     
     "Configuración visual"
@@ -64,7 +34,7 @@ Celda >> CrearCelda: ancho altoo: alto fila: i columna: j juegador: num [
 
     "Crear un jugador y asociarlo a la celda"
     jugador := Jugador new.
-    jugador CrearJugador: num color: COLORCELDA.
+    jugador CrearJugador: num color: COLORCELDA total: total.
     jugador AgregarTerritorio: self.
     self setPropietario: jugador.
 
@@ -74,6 +44,11 @@ Celda >> CrearCelda: ancho altoo: alto fila: i columna: j juegador: num [
 { #category : 'as yet unclassified' }
 Celda >> GetPropietario [
 ^Propietario.
+]
+
+{ #category : 'as yet unclassified' }
+Celda >> getColor [
+^COLORCELDA 
 ]
 
 { #category : 'as yet unclassified' }

@@ -56,7 +56,8 @@ Tablero >> Crear_Tablero: arg1 columna: arg2 [
 				        altoo: tmp8
 				        fila: tmp19
 				        columna: tmp21
-				        juegador: tmp15.
+				        juegador: tmp15
+						  total:arg1.
 			tmp6 position: tmp12 @ tmp13.
 			tmp15 := tmp15 + 1.
 			(tmp11 at: tmp19) at: tmp21 put: tmp6.
@@ -80,137 +81,104 @@ Tablero >> Crear_Tablero: arg1 columna: arg2 [
 ]
 
 { #category : 'as yet unclassified' }
-Tablero >> ElegirCeldaAdyacente [
+Tablero >> ElegirCeldaAdyacente: X y: Y [
 
-	| tmp1 tmp2 tmp3 tmp4 |
-	tmp1 := celdaSeleccionada getX.
-	tmp2 := celdaSeleccionada getY.
-	tmp3 := OrderedCollection new.
-	tmp1 > 1 ifTrue: [ tmp3 add: (Matrix at: tmp1 - 1) at: tmp2 ].
-	tmp1 < Matrix size ifTrue: [
-		tmp3 add: (Matrix at: tmp1 + 1) at: tmp2 ].
-	tmp2 > 1 ifTrue: [ tmp3 add: (Matrix at: tmp1) at: tmp2 - 1 ].
-	tmp2 < (Matrix at: tmp1) size ifTrue: [
-		tmp3 add: (Matrix at: tmp1) at: tmp2 + 1 ].
-	tmp3 do: [ :arg1 | arg1 color: Color green ].
-	tmp4 := tmp3 atRandom.
-	celdaSeleccionada
-		borderWidth: 2;
-		borderColor: Color black.
-	tmp4
-		borderWidth: 4;
-		borderColor: Color red.
-	celdaSeleccionada := tmp4.
-	^ tmp4
-]
+	| fila columna celdasAdyacentes posicionesAdyacentes adyacentes cont botonTemporal buscarAdyacentes resultado |
+	"Marcar la celda seleccionada"
+	celdaSeleccionada borderWidth: 4.
+	celdaSeleccionada borderColor: Color red.
 
-{ #category : 'as yet unclassified' }
-Tablero >> ElegirCeldaAdyacente: X y: Y [ 
-    | fila columna celdasAdyacentes posicionesAdyacentes adyacentes cont botonTemporal  |
+	cont := 1.
+	"Obtener la posición de la celda seleccionada"
+	fila := X.
+	columna := Y.
 
-    "Marcar la celda seleccionada"
-    celdaSeleccionada borderWidth: 4.
-    celdaSeleccionada borderColor: Color red.
+	"Inicializar la colección de celdas adyacentes"
+	celdasAdyacentes := OrderedCollection new.
+	botones := OrderedCollection new. "Colección para almacenar los botones"
 
-    cont := 1.
-    "Obtener la posición de la celda seleccionada"
-    fila := X.
-    columna := Y.
+	"Obtener las posiciones iniciales adyacentes"
+	celdasAdyacentes := {
+		                    (fila - 1 @ columna). "Arriba"
+		                    (fila + 1 @ columna). "Abajo"
+		                    (fila @ (columna - 1)). "Izquierda"
+		                    (fila @ (columna + 1)) "Derecha" }.
 
-    "Inicializar la colección de celdas adyacentes"
-    celdasAdyacentes := OrderedCollection new.
-    botones := OrderedCollection new.  "Colección para almacenar los botones"
+	"Inicializar referencias y colección de celdas adyacentes anteriores"
+	adyacenteArriba := nil.
+	adyacenteAbajo := nil.
+	adyacenteIzquierda := nil.
+	adyacenteDerecha := nil.
+	celdasAdyacentesAnteriores := OrderedCollection new.
 
-    "Predefinir todas las posiciones posibles de las celdas adyacentes (arriba, abajo, izquierda, derecha)"
-    celdasAdyacentes := {
-        (fila - 1) @ columna.  "Arriba"
-        (fila + 1) @ columna.  "Abajo"
-        fila @ (columna - 1).  "Izquierda"
-        fila @ (columna + 1).  "Derecha"
-    }.
+	"Inicializar el contador para asociar direcciones"
+	celdasAdyacentes do: [ :pos |
+		| celdaAdyacente |
+		"Verificar si la posición está dentro de los límites del tablero"
+		((pos x between: 1 and: Matrix size) and: [
+			 pos y between: 1 and: (Matrix at: 1) size ]) ifTrue: [
+			celdaAdyacente := (Matrix at: pos x) at: pos y.
+			celdaAdyacente borderWidth: 4.
+			
 
-    "Inicializar referencias y colección de celdas adyacentes anteriores"
-    adyacenteArriba := nil.
-    adyacenteAbajo := nil.
-    adyacenteIzquierda := nil.
-    adyacenteDerecha := nil.
-    celdasAdyacentesAnteriores := OrderedCollection new.
+			"Asociar cada celda con su dirección específica según el contador"
+			cont caseOf: {
+					([ 1 ] -> [
+					 adyacenteArriba := celdaAdyacente.
+					 botonTemporal := SimpleButtonMorph new.
+					 botonTemporal label: 'Seleccionar'.
+					 botonTemporal target: self.
+					 botonTemporal actionSelector: #manejarClicEnCeldaAdyacenteArriba.
 
-    "Inicializar el contador para asociar direcciones"
-    celdasAdyacentes do: [:pos |
-        | celdaAdyacente |
-        "Verificar si la posición está dentro de los límites del tablero"
-        ((pos x between: 1 and: Matrix size) and: [pos y between: 1 and: (Matrix at: 1) size]) ifTrue: [
-            celdaAdyacente := (Matrix at: pos x) at: pos y.
-            celdaAdyacente borderWidth: 4.
-            celdaAdyacente borderColor: Color white.
+					 botonTemporal extent: celdaAdyacente extent // 2.
+					 botonTemporal position:
+						 celdaAdyacente position + (celdaAdyacente extent // 4).
+					 celdaAdyacente addMorph: botonTemporal.
+					 botones add: botonTemporal "Añadir el botón a la colección" ]).
+					([ 2 ] -> [
+					 adyacenteAbajo := celdaAdyacente.
+					 botonTemporal := SimpleButtonMorph new.
+					 botonTemporal label: 'Seleccionar'.
+					 botonTemporal target: self.
+					 botonTemporal actionSelector: #manejarClicEnCeldaAdyacenteAbajo.
 
-            "Asociar cada celda con su dirección específica según el contador"
-            cont caseOf: {
-                [1] -> [
-                    adyacenteArriba := celdaAdyacente.
-                    botonTemporal := SimpleButtonMorph new.
-                    botonTemporal label: 'Seleccionar'.
-                    botonTemporal target: self.
-                    botonTemporal actionSelector: #manejarClicEnCeldaAdyacenteArriba.
+					 botonTemporal extent: celdaAdyacente extent // 2.
+					 botonTemporal position:
+						 celdaAdyacente position + (celdaAdyacente extent // 4).
+					 celdaAdyacente addMorph: botonTemporal.
+					 botones add: botonTemporal "Añadir el botón a la colección" ]).
+					([ 3 ] -> [
+					 adyacenteIzquierda := celdaAdyacente.
+					 botonTemporal := SimpleButtonMorph new.
+					 botonTemporal label: 'Seleccionar'.
+					 botonTemporal target: self.
+					 botonTemporal actionSelector:
+						 #manejarClicEnCeldaAdyacenteIzquierda.
 
-                    botonTemporal extent: celdaAdyacente extent // 2.
-                    botonTemporal position: celdaAdyacente position + (celdaAdyacente extent // 4).
-                    celdaAdyacente addMorph: botonTemporal.
-                    botones add: botonTemporal. "Añadir el botón a la colección"
-                ].
-                [2] -> [
-                    adyacenteAbajo := celdaAdyacente.
-                    botonTemporal := SimpleButtonMorph new.
-                    botonTemporal label: 'Seleccionar'.
-                    botonTemporal target: self.
-                    botonTemporal actionSelector: #manejarClicEnCeldaAdyacenteAbajo.
+					 botonTemporal extent: celdaAdyacente extent // 2.
+					 botonTemporal position:
+						 celdaAdyacente position + (celdaAdyacente extent // 4).
+					 celdaAdyacente addMorph: botonTemporal.
+					 botones add: botonTemporal "Añadir el botón a la colección" ]).
+					([ 4 ] -> [
+					 adyacenteDerecha := celdaAdyacente.
+					 botonTemporal := SimpleButtonMorph new.
+					 botonTemporal label: 'Seleccionar'.
+					 botonTemporal target: self.
+					 botonTemporal actionSelector:
+						 #manejarClicEnCeldaAdyacenteDerecha.
 
-                    botonTemporal extent: celdaAdyacente extent // 2.
-                    botonTemporal position: celdaAdyacente position + (celdaAdyacente extent // 4).
-                    celdaAdyacente addMorph: botonTemporal.
-                    botones add: botonTemporal. "Añadir el botón a la colección"
-                ].
-                [3] -> [
-                    adyacenteIzquierda := celdaAdyacente.
-                    botonTemporal := SimpleButtonMorph new.
-                    botonTemporal label: 'Seleccionar'.
-                    botonTemporal target: self.
-                    botonTemporal actionSelector: #manejarClicEnCeldaAdyacenteIzquierda.
+					 botonTemporal extent: celdaAdyacente extent // 2.
+					 botonTemporal position:
+						 celdaAdyacente position + (celdaAdyacente extent // 4).
+					 celdaAdyacente addMorph: botonTemporal.
+					 botones add: botonTemporal "Añadir el botón a la colección" ]) }
 
-                    botonTemporal extent: celdaAdyacente extent // 2.
-                    botonTemporal position: celdaAdyacente position + (celdaAdyacente extent // 4).
-                    celdaAdyacente addMorph: botonTemporal.
-                    botones add: botonTemporal. "Añadir el botón a la colección"
-                ].
-                [4] -> [
-                    adyacenteDerecha := celdaAdyacente.
-                    botonTemporal := SimpleButtonMorph new.
-                    botonTemporal label: 'Seleccionar'.
-                    botonTemporal target: self.
-                    botonTemporal actionSelector: #manejarClicEnCeldaAdyacenteDerecha.
+			"Agregar la celda válida a la colección de referencias anteriores"
+			"celdasAdyacentesAnteriores add: celdaAdyacente." ].
 
-                    botonTemporal extent: celdaAdyacente extent // 2.
-                    botonTemporal position: celdaAdyacente position + (celdaAdyacente extent // 4).
-                    celdaAdyacente addMorph: botonTemporal.
-                    botones add: botonTemporal. "Añadir el botón a la colección"
-                ].
-            }.
-
-            "Agregar la celda válida a la colección de referencias anteriores"
-            "celdasAdyacentesAnteriores add: celdaAdyacente."
-        ].
-
-        "Avanzar al siguiente contador para la próxima dirección"
-        cont := cont + 1.
-    ].
-
-    "Después de hacer clic en cualquier botón, eliminar todos los botones"
-    
-
-
-		
-
+		"Avanzar al siguiente contador para la próxima dirección"
+		cont := cont + 1 ]
 ]
 
 { #category : 'as yet unclassified' }
@@ -249,35 +217,22 @@ Tablero >> ivo [
 Tablero >> manejarClicEnCeldaAdyacente [
 
 	| tmp1 |
-	Transcript
-		show: 'Celda seleccionada: ' , celdaSeleccionada printString , ' ('
-			, celdaSeleccionada getX asString , ','
-			, celdaSeleccionada getY asString , ')';
-		cr;
-		show:
-			'Celda adyacente tocada: ' , celdaAdyacente printString , ' ('
-			, celdaAdyacente getX asString , ',' , celdaAdyacente getY asString
-			, ')';
-		cr.
+	Transcript show: 'Celda seleccionada: ' , celdaSeleccionada printString , ' (' , celdaSeleccionada getX asString , ',' , celdaSeleccionada getY asString , ')';cr.
+		Transcript show: 'Celda adyacente tocada: ' , celdaAdyacente printString , ' (', celdaAdyacente getX asString , ',' , celdaAdyacente getY asString, ')';cr.
 	tmp1 := Duelo new
-		        iniciarDueloEntre: celdaSeleccionada GetPropietario
-		        jugador2: celdaAdyacente GetPropietario
-]
-
-{ #category : 'as yet unclassified' }
-Tablero >> manejarClicEnCeldaAdyacente: celdaAdyacente [
-        "Mostrar la celda adyacente que fue tocada"
-		  Transcript show: 'Celda seleccionada: ', celdaSeleccionada printString, ' (', celdaSeleccionada getX asString, ',', celdaSeleccionada getY asString, ')'; cr.
-        Transcript show: 'Celda adyacente tocada: ', celdaAdyacente class
+		        iniciarDueloEntre: (celdaSeleccionada GetPropietario) jugador2: (celdaAdyacente GetPropietario) .
+botones do: [:boton |
+        boton delete.
+    ].
 ]
 
 { #category : 'as yet unclassified' }
 Tablero >> manejarClicEnCeldaAdyacenteAbajo [
     |duelo |
         "Mostrar la celda adyacente que fue tocada"
-          Transcript show: 'Celda seleccionada: ', celdaSeleccionada printString, ' (', celdaSeleccionada getX asString, ',', celdaSeleccionada getY asString, ')'; cr.
+          Transcript show: 'Celda seleccionada: ', celdaSeleccionada printString, ' (', (celdaSeleccionada getX) asString, ',', (celdaSeleccionada getY) asString, ')'; cr.
 
-        Transcript show: 'Celda adyacente tocada: ', adyacenteAbajo printString, ' (', ( adyacenteAbajo )  getX asString, ',', adyacenteAbajo getY asString, ')'; cr.
+        Transcript show: 'Celda adyacente tocada: ', adyacenteAbajo printString, ' (', ( adyacenteAbajo   getX) asString, ',', (adyacenteAbajo getY) asString, ')'; cr.
 
         duelo:= Duelo new iniciarDueloEntre: (celdaSeleccionada GetPropietario) jugador2: (adyacenteAbajo GetPropietario) .
 			
@@ -291,8 +246,8 @@ botones do: [:boton |
 Tablero >> manejarClicEnCeldaAdyacenteArriba [
     |duelo |
         "Mostrar la celda adyacente que fue tocada"
-          Transcript show: 'Celda seleccionada: ', celdaSeleccionada printString, ' (', celdaSeleccionada getX asString, ',', celdaSeleccionada getY asString, ')'; cr.
-        Transcript show: 'Celda adyacente tocada: ', adyacenteArriba printString, ' (', adyacenteArriba getX asString, ',', adyacenteArriba  getY asString, ')'; cr.
+          Transcript show: 'Celda seleccionada: ', celdaSeleccionada printString, ' (', (celdaSeleccionada getX) asString, ',', (celdaSeleccionada getY) asString, ')'; cr.
+        Transcript show: 'Celda adyacente tocada: ', adyacenteArriba printString, ' (', (adyacenteArriba getX) asString, ',', (adyacenteArriba  getY) asString, ')'; cr.
 
         duelo:= Duelo new iniciarDueloEntre: (celdaSeleccionada GetPropietario) jugador2: (adyacenteArriba GetPropietario).
 
@@ -306,8 +261,8 @@ botones do: [:boton |
 Tablero >> manejarClicEnCeldaAdyacenteDerecha [
     |duelo |
         "Mostrar la celda adyacente que fue tocada"
-          Transcript show: 'Celda seleccionada: ', celdaSeleccionada printString, ' (', celdaSeleccionada getX asString, ',', celdaSeleccionada getY asString, ')'; cr.
-        Transcript show: 'Celda adyacente tocada: ', adyacenteDerecha printString, ' (', adyacenteDerecha  getX asString, ',', adyacenteDerecha  getY asString, ')'; cr.
+          Transcript show: 'Celda seleccionada: ', celdaSeleccionada printString, ' (', (celdaSeleccionada getX) asString, ',', (celdaSeleccionada getY) asString, ')'; cr.
+        Transcript show: 'Celda adyacente tocada: ', adyacenteDerecha printString, ' (', (adyacenteDerecha  getX) asString, ',', (adyacenteDerecha  getY) asString, ')'; cr.
 
      duelo:= Duelo new iniciarDueloEntre: (celdaSeleccionada GetPropietario) jugador2: (adyacenteDerecha GetPropietario).
 botones do: [:boton |
@@ -321,8 +276,8 @@ Tablero >> manejarClicEnCeldaAdyacenteIzquierda [
     |duelo |
         "Mostrar la celda adyacente que fue tocada"
 
-          Transcript show: 'Celda seleccionada: ', celdaSeleccionada printString, ' (', celdaSeleccionada getX asString, ',', celdaSeleccionada getY asString, ')'; cr.
-        Transcript show: 'Celda adyacente tocada: ', adyacenteIzquierda printString, ' (', adyacenteIzquierda   getX asString, ',', adyacenteIzquierda  getY asString, ')'; cr.
+          Transcript show: 'Celda seleccionada: ', celdaSeleccionada printString, ' (', (celdaSeleccionada getX) asString, ',', (celdaSeleccionada getY) asString, ')'; cr.
+        Transcript show: 'Celda adyacente tocada: ', adyacenteIzquierda printString, ' (', (adyacenteIzquierda   getX) asString, ',', (adyacenteIzquierda  getY) asString, ')'; cr.
 
         duelo:= Duelo new iniciarDueloEntre: (celdaSeleccionada GetPropietario) jugador2: (adyacenteIzquierda GetPropietario).
 botones do: [:boton |

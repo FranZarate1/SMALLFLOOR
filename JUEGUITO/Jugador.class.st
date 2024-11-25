@@ -6,7 +6,8 @@ Class {
 		'COLOR',
 		'territorio',
 		'cant_celdas',
-		'flagDuelo'
+		'flagDuelo',
+		'total'
 	],
 	#category : 'JUEGUITO',
 	#package : 'JUEGUITO'
@@ -28,12 +29,14 @@ Jugador >> AgregarTerritorio: otroTerritorio [
 ]
 
 { #category : 'as yet unclassified' }
-Jugador >> CrearJugador: unNombre color: unColor [ 
+Jugador >> CrearJugador: unNombre color: unColor total:final [
+	 self setTotal: final.
     self SetNombre: unNombre asInteger.
     self SetColor: unColor.
     territorio := OrderedCollection new. "Inicializa territorio como una colección vacía"
     Transcript show: 'Jugador creado: ', unNombre asString, ' con color: ', unColor printString; cr.
     ^ self.
+	 
     
 
 ]
@@ -64,13 +67,20 @@ Jugador >> activarDuelo [
 { #category : 'as yet unclassified' }
 Jugador >> actualizarColorTerritorio [
     "Actualizar el color de todas las celdas en el territorio del jugador"
+	|canti|
+	canti:=0.
     territorio ifNil: [^self]. "Evitar errores si el territorio está vacío"
 
     territorio do: [:celda |
         (celda color ~= self GetColor ) ifTrue: [
             celda color: self GetColor.
+				celda setPropietario: self
         ].
     ].
+	canti:=(self getTotal).
+	canti:=canti*2.
+	
+	 canti = (territorio size) ifTrue: [ Transcript show: 'Tipazo Ganaste SMALLFLOOR'; cr.  ] 
 ]
 
 { #category : 'as yet unclassified' }
@@ -95,12 +105,22 @@ Jugador >> getTerritorio [
 	^territorio 
 ]
 
+{ #category : 'as yet unclassified' }
+Jugador >> getTotal [
+	^total 
+]
+
 { #category : 'initialization' }
 Jugador >> initialize [
     super initialize.
     territorio := OrderedCollection new. "Inicializar como una colección vacía"
  "Inicializamos la bandera en falso"
     flagDuelo := false.
+]
+
+{ #category : 'initialization' }
+Jugador >> setTotal:unTotal [
+  total:=unTotal.
 ]
 
 { #category : 'as yet unclassified' }
