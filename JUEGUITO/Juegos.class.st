@@ -105,62 +105,61 @@ Juegos >> BatallaClicks [
 
 	"Proceso para actualizar el tiempo y alternar turnos"
 	procesoTiempo := [
-		[ turnoActual <= turnoMaximo ] whileTrue: [
-			tiempoRestante := 10.
-			tiempoEsperaLabel contents: ''.
-			tiempoEsperaLabel changed.
-			[ tiempoRestante > 0 ] whileTrue: [
-				(Delay forSeconds: 1) wait.
-				tiempoRestante := tiempoRestante - 1.
-				tiempoLabel contents:
-					'Tiempo restante: ' , tiempoRestante printString
-					, ' segundos'.
-				tiempoLabel changed ].
-			ventana removeMorph: boton.
-			turnoActual := turnoActual + 1.
-			turnoActual <= turnoMaximo ifTrue: [
-				tiempoEsperaLabel
-					contents: 'Esperando el siguiente turno...';
-					changed.
-				(Delay forSeconds: tiempoEspera) wait.
-				turnoLabel contents:
-					'Turno de: ' , (turnoActual = 1
-						ifTrue: [ jugador1 ]
-						ifFalse: [ jugador2 ]).
-				turnoLabel changed.
-				boton position:
-					ventana innerBounds center - (boton extent // 2).
-				ventana addMorph: boton ] ].
-		ganador := contador1 > contador2
-			ifTrue: [ ganador_duelo := 1 ]
-			ifFalse: [
-				contador2 > contador1
-					ifTrue: [ ganador_duelo := 2 ]
-					ifFalse: [ 'Empate' ] ].
+    [ turnoActual <= turnoMaximo ] whileTrue: [
+        tiempoRestante := 10.
+        tiempoEsperaLabel contents: ''.
+        tiempoEsperaLabel changed.
+        [ tiempoRestante > 0 ] whileTrue: [
+            (Delay forSeconds: 1) wait.
+            tiempoRestante := tiempoRestante - 1.
+            tiempoLabel contents: 
+                'Tiempo restante: ' , tiempoRestante printString , ' segundos'.
+            tiempoLabel changed
+        ].
+        ventana removeMorph: boton.
+        turnoActual := turnoActual + 1.
+        turnoActual <= turnoMaximo ifTrue: [
+            tiempoEsperaLabel 
+                contents: 'Esperando el siguiente turno...'; 
+                changed.
+            (Delay forSeconds: tiempoEspera) wait.
+            turnoLabel contents: 
+                'Turno de: ' , (turnoActual = 1
+                    ifTrue: [ jugador1 ]
+                    ifFalse: [ jugador2 ]).
+            turnoLabel changed.
+            boton position: ventana innerBounds center - (boton extent // 2).
+            ventana addMorph: boton
+        ]
+    ].
 
+    "Evaluar el ganador después de que todos los turnos hayan terminado"
+    turnoActual > turnoMaximo ifTrue: [
+        ganador := contador1 > contador2 
+            ifTrue: [ 1 ] 
+            ifFalse: [ contador2 > contador1 ifTrue: [ 2 ] ifFalse: [ 'Empate' ] ].
 
-		"Mostrar el resultado en la interfaz"
-		ganador = 'Empate'
-			ifTrue: [
-				ganadorLabel contents:
-					'Empate! El juego se reiniciará.'.
-				ganadorLabel changed.
-				tiempoLabel contents: ''.
-				tiempoLabel changed.
-				turnoLabel contents: ''.
-				turnoLabel changed.
-
-				(Delay forSeconds: 3) wait.
-				ventana delete.
-				self ReiniciarClicks ]
-			ifFalse: [
-				ganadorLabel contents: 'Juego terminado. 
-	' , jugador1 , ': ' , contador1 printString , ' clics. 
-	' , jugador2 , ': ' , contador2 printString , ' clics. 
-	Ganador: jugador ' , ganador printString.
-				ganadorLabel changed.
-				(Delay forSeconds: 5) wait.
-				ventana delete ] ] fork.
+        "Mostrar el resultado en la interfaz"
+        ganador = 'Empate'
+            ifTrue: [
+                ganadorLabel contents: 
+                    'Empate! El juego se reiniciará.'.
+                ganadorLabel changed.
+                (Delay forSeconds: 3) wait.
+                ventana delete.
+                self ReiniciarClicks
+            ]
+            ifFalse: [
+                ganadorLabel contents: 'Juego terminado. 
+    ' , jugador1 , ': ' , contador1 printString , ' clics. 
+    ' , jugador2 , ': ' , contador2 printString , ' clics. 
+    Ganador: jugador ' , ganador printString.
+                ganadorLabel changed.
+                (Delay forSeconds: 5) wait.
+                ventana delete
+            ]
+    ]
+] fork.
 
 ]
 
